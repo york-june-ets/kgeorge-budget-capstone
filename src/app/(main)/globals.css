@@ -38,3 +38,31 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   align-self: center;
 }
+
+.page-right {
+    width: 500px;
+    height: 700px;
+    box-shadow: 
+        0 -10px 40px rgba(0, 0, 0, 0.8),
+        inset 10px 0 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.logout {
+    background-color: #0776d7;
+    color: white;
+    width: 100px;
+    height: 40px;
+    border: 1px solid white;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    display: block;
+    position: fixed;
+    right: 0;
+    top:0;
+    margin: 20px;
+}

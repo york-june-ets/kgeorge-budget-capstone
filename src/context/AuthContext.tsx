@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setCurrentCustomer(null)
     window.localStorage.removeItem('authToken')
     window.localStorage.removeItem('currentCustomer')
-    window.location.href="/login"
+    window.location.href="/welcome"
   }
 
     return (

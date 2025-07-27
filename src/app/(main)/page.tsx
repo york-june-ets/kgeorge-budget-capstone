@@ -1,8 +1,12 @@
+'use client'
+
 import styles from "@/styles/budget-book.module.css"
+import { useRouter } from "next/navigation"
 
 export default function BudgetBook() {
+    const router = useRouter()
     return (
-        <div className={styles.cover}>
+        <div className={styles.cover} onClick={() => router.push('/table-of-contents')}>
             <div className={styles.top}>
                 <div className="logo">
                     <img className="logo_img" src="/logo.png"></img>
