@@ -1,20 +1,33 @@
-import Header from "@/components/Header"
-import styles from "@/styles/home.module.css"
+import styles from "@/styles/budget-book.module.css"
 
-export default function Home() {
-  return (
-    <div className={styles.home}>
-      <Header/>
-      <div className={styles.slide}>
-        <div className={styles.block}>
-          <h1 className={styles.title}>Track Your Spending.<br/>Grow Your Savings.<br/>With Budget Book.</h1>
-          <p className={styles.body}>Budget Book helps you take control of your finances. Track your accounts, monitor spending, build custom budgets, categorize expenses, and set financial goals with ease.</p>
+export default function BudgetBook() {
+    return (
+        <div className={styles.cover}>
+            <div className={styles.top}>
+                <div className="logo">
+                    <img className="logo_img" src="/logo.png"></img>
+                    <h1 className="logo_text">BudgetBook</h1>
+                </div>
+                <div className={styles.dots}>
+                    <div className={styles.dot}></div>
+                    <div className={styles.dot}></div>
+                    <div className={styles.dot}></div>
+                </div>
+            </div>
+            <div className={styles.title}>
+                <span className={styles.text_budget}>BUDGET</span>
+                <br></br>
+                <span className={styles.text_book}>BOOK</span>
+            </div>
+            <p className={styles.text}>Welcome back. It’s time to turn the page on your finances and start a new chapter—organize your budget, grow your savings, and build your future.</p>
+            <div className={styles.rectangle}></div>
+            <div className={styles.dots}>
+                <div className={styles.dot}></div>
+                <div className={styles.dot}></div>
+                <div className={styles.dot}></div>
+            </div>
+            <a className={styles.site_link} href='/'>www.budgetbook.com</a>
+            <img className={styles.city} src="/city.png"></img>
         </div>
-        <video className={styles.video} autoPlay muted>
-          <source src="intro_video.mp4" type="video/mp4"/>
-          <img src="/intro_video_fallback.png" alt="budget book displayed on a computer screen"/>
-        </video>
-      </div>
-    </div>
-  )
+    )
 }
