@@ -1,0 +1,23 @@
+.login {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 250px;
+  height: 550px;
+  border-radius: 50px;;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  background-color: rgb(230, 247, 253);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
