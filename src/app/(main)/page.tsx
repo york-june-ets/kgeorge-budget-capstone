@@ -1,10 +1,22 @@
 'use client'
 
+import { AuthContext } from "@/context/AuthContext"
 import styles from "@/styles/budget-book.module.css"
 import { useRouter } from "next/navigation"
+import { useContext, useEffect } from "react"
 
 export default function BudgetBook() {
     const router = useRouter()
+    const {token, currentCustomer, loading} = useContext(AuthContext)
+
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
+    
     return (
         <div className={styles.cover} onClick={() => router.push('/table-of-contents')}>
             <div className={styles.top}>

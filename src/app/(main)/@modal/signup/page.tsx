@@ -1,7 +1,7 @@
 'use client'
 
 import { Overlay } from "@/components/Overlay"
-// import { fetchCreateCustomer } from "@/lib/customer"
+import { fetchCreateCustomer } from "@/lib/customer"
 import styles from '@/styles/signup.module.css'
 import { SignupRequest } from "@/types/SignupRequest"
 import { useRouter } from "next/navigation"
@@ -26,26 +26,26 @@ export default function SignupModal() {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
             setLoading(true)
-            // const submitSignupRequest = async () => {
-            //     try {
-            //         const response = await fetchCreateCustomer(signupRequest)
-            //         if (response.ok) {
-            //             router.push('/login')
-            //         } 
-            //         else {
-            //             const errorResponse = await response.json()
-            //             setError(errorResponse.message)
-            //         }
-            //     } catch (err) {
-            //         setError("An unexpected error occured")
-            //         console.error(err)
-            //     }
-            // }
-            // if (signupRequest.password === confirmPassword.current?.value) {
-            //     submitSignupRequest()
-            // } else {
-            //     setError("Passwords do not match")
-            // }
+            const submitSignupRequest = async () => {
+                try {
+                    const response = await fetchCreateCustomer(signupRequest)
+                    if (response.ok) {
+                        router.push('/login')
+                    } 
+                    else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                } catch (err) {
+                    setError("An unexpected error occured")
+                    console.error(err)
+                }
+            }
+            if (signupRequest.password === confirmPassword.current?.value) {
+                submitSignupRequest()
+            } else {
+                setError("Passwords do not match")
+            }
             setLoading(false)
         }
 
@@ -64,7 +64,7 @@ export default function SignupModal() {
                     <input type="email" name="email" placeholder="Email*" value={signupRequest.email} onChange={handleChange} disabled={loading} required></input>
                     <input type="password" name="password" placeholder="Password*" value={signupRequest.password} onChange={handleChange} disabled={loading} minLength={8} required></input>
                     <input type="password" placeholder="Confirm Password*" ref={confirmPassword} onChange={handleChange} disabled={loading} required></input>
-                    <input type="tel" name="phoneNumber" placeholder="Phone Number*" value={signupRequest.phoneNumber} onChange={handleChange} disabled={loading}></input>
+                    <input type="tel" name="phoneNumber" placeholder="Phone Number" value={signupRequest.phoneNumber} onChange={handleChange} disabled={loading}></input>
                     <button className="buttonPrimary" type="submit" disabled={loading}>Signup</button>
                     {error && <p>{error}</p>}
                 </form>

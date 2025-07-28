@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
             setCurrentCustomer(customerInfo)
             window.localStorage.setItem('authToken', customerToken)
             window.localStorage.setItem('currentCustomer', JSON.stringify(customerInfo))
-            window.location.href="/dashboard"
+            window.location.href="/"
         }
     }
 

@@ -4,8 +4,8 @@ import { useContext, useState } from "react"
 import styles from "@/styles/login.module.css"
 import { Overlay } from "@/components/Overlay"
 import { LoginRequest } from "@/types/LoginRequest"
-// import { fetchAuthenticateCustomer, fetchCreateCustomer } from "@/lib/customer"
 import { AuthContext } from "@/context/AuthContext"
+import { fetchAuthenticateCustomer } from "@/lib/customer"
 
 export default function LoginModal() {
     const [error, setError] = useState<String>("")
@@ -25,23 +25,23 @@ export default function LoginModal() {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setLoading(true)
-        // const submitLoginRequest = async () => {
-        //     try {
-        //         const response = await fetchAuthenticateCustomer(loginRequest)
-        //         if (response.ok) {
-        //             const customerData = await response.json()
-        //             login(crypto.randomUUID(), customerData)
-        //         } 
-        //         else {
-        //             const errorResponse = await response.json()
-        //             setError(errorResponse.message)
-        //         }
-        //     } catch (err) {
-        //         setError("An unexpected error occured")
-        //         console.error(err)
-        //     }
-        // }
-        // submitLoginRequest()
+        const submitLoginRequest = async () => {
+            try {
+                const response = await fetchAuthenticateCustomer(loginRequest)
+                if (response.ok) {
+                    const customerData = await response.json()
+                    login(crypto.randomUUID(), customerData)
+                } 
+                else {
+                    const errorResponse = await response.json()
+                    setError(errorResponse.message)
+                }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            }
+        }
+        submitLoginRequest()
         setLoading(false)
     }
 
