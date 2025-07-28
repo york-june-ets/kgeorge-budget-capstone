@@ -33,6 +33,18 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         setLoading(false)
     },[])
 
+    useEffect(() => {
+        if (!token) return
+
+        const timeout = setTimeout(() => {
+            localStorage.removeItem("authToken")
+            localStorage.removeItem("currentCustomer")
+            window.location.href = "/login"
+        }, 30 * 60 * 1000)
+
+        return () => clearTimeout(timeout)
+    }, [token])
+
     const login = (customerToken: string | null, customerInfo: Customer | null) => {
         if (customerToken && customerInfo) {
             setToken(customerToken)
