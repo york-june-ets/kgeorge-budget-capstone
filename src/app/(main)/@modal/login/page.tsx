@@ -5,7 +5,7 @@ import styles from "@/styles/login.module.css"
 import { Overlay } from "@/components/Overlay"
 import { LoginRequest } from "@/types/LoginRequest"
 import { AuthContext } from "@/context/AuthContext"
-import { fetchAuthenticateCustomer } from "@/lib/customer"
+import { fetchAuthenticateCustomer } from "@/lib/auth"
 
 export default function LoginModal() {
     const [error, setError] = useState<String>("")
@@ -29,8 +29,8 @@ export default function LoginModal() {
             try {
                 const response = await fetchAuthenticateCustomer(loginRequest)
                 if (response.ok) {
-                    const customerData = await response.json()
-                    login(crypto.randomUUID(), customerData)
+                    const authData = await response.json()
+                    login(authData.token, authData.customer)
                 } 
                 else {
                     const errorResponse = await response.json()

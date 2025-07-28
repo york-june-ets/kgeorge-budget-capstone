@@ -1,5 +1,6 @@
 'use client'
 
+import { fetchEndSession } from "@/lib/auth"
 import { Customer } from "@/types/Customer"
 import { createContext, ReactNode, useEffect, useState } from "react"
 
@@ -37,9 +38,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         if (!token) return
 
         const timeout = setTimeout(() => {
-            localStorage.removeItem("authToken")
-            localStorage.removeItem("currentCustomer")
-            window.location.href = "/login"
+            logout()
         }, 30 * 60 * 1000)
 
         return () => clearTimeout(timeout)
@@ -56,11 +55,12 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     }
 
   const logout = () => {
-    setToken(null)
-    setCurrentCustomer(null)
+    if (token) {fetchEndSession(token)}
     window.localStorage.removeItem('authToken')
     window.localStorage.removeItem('currentCustomer')
-    window.location.href="/welcome"
+    setToken(null)
+    setCurrentCustomer(null)
+    window.location.href="/login"
   }
 
     return (
