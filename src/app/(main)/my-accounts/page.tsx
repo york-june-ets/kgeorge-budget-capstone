@@ -12,7 +12,7 @@ export default function MyAccounts() {
     const [error, setError] = useState<String>("")
     const [loading, setLoading] = useState<boolean>(false)
     const {token} = useContext(AuthContext)
-    const [accountRequest, setAccountRequest] = useState<AccountRequest>({name: "", type: ""})
+    const [accountRequest, setAccountRequest] = useState<AccountRequest>({name: "", type: "", balance: "0.00"})
     const [accounts, setAccounts] = useState<Account[]>([])
     const [refresh, setRefresh] = useState<number>(0)
 
@@ -43,6 +43,11 @@ export default function MyAccounts() {
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
         const {name, value} = event.target
+        if (name === "balance") {
+            // Accept: empty string or numbers with up to 2 decimal places
+            const regex = /^\d*(\.\d{0,2})?$/
+            if (!regex.test(value)) return
+        }
         setAccountRequest(prev => ({
             ...prev,
             [name]: value
@@ -87,6 +92,7 @@ export default function MyAccounts() {
                         <option value={AccountType.CASH}>CASH</option>
                         <option value={AccountType.OTHER}>OTHER</option>
                     </select>
+                    <input type="text" name="balance" placeholder="0.00" value={accountRequest.balance} onChange={handleChange} disabled={loading} required></input>
                     <button className="buttonPrimary" type="submit" disabled={loading}>Create</button>
                     {error && <p>{error}</p>}
                 </form>

@@ -5,4 +5,5 @@ export type Account = {
     customerId: number
     name: string
     type: AccountType
+    balance: number
 }
