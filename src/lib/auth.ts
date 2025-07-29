@@ -13,7 +13,7 @@ export const fetchAuthenticateCustomer = async (request: LoginRequest) => {
 export const fetchEndSession = async (token: string) => {
     const url = `http://localhost:8080/api/auth/logout`
     const response = await fetch(url, {
-        method: "DELETE",
+        method: "PUT",
         headers: {'Authorization': `Bearer ${token}`}
     })
 }
