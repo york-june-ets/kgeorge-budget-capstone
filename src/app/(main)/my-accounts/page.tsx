@@ -1,11 +1,103 @@
+'use client'
+
+import { AuthContext } from "@/context/AuthContext"
+import { fetchCreateAccount, fetchCustomerAccounts } from "@/lib/account"
+import styles from "@/styles/my-accounts.module.css"
+import { Account } from "@/types/Account"
+import { AccountRequest } from "@/types/AccountRequest"
+import { AccountType } from "@/types/AccountType"
+import { useContext, useEffect, useState } from "react"
+
 export default function MyAccounts() {
+    const [error, setError] = useState<String>("")
+    const [loading, setLoading] = useState<boolean>(false)
+    const {token} = useContext(AuthContext)
+    const [accountRequest, setAccountRequest] = useState<AccountRequest>({name: "", type: ""})
+    const [accounts, setAccounts] = useState<Account[]>([])
+    const [refresh, setRefresh] = useState<number>(0)
+
+    useEffect(() => {
+        setLoading(true)
+        const getCustomerAccounts = async () => {
+            try {
+                if (token) {
+                    const response = await fetchCustomerAccounts(token)
+                    if (response.ok) {
+                        const accounts = await response.json()
+                        setAccounts(accounts)
+                    } else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                }
+            } catch (err) {
+                setError("An unexpecetd error occurred")
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        getCustomerAccounts()
+    }, [refresh])
+
+    function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+        setError("")
+        const {name, value} = event.target
+        setAccountRequest(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        setLoading(true)
+        const submitAccountRequest = async () => {
+            try {
+                if (token) {
+                    const response = await fetchCreateAccount(token, accountRequest)
+                    if (response.ok) {
+                        setRefresh(refresh + 1)
+                    } 
+                    else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        submitAccountRequest()
+    }
+
     return (
         <div className="book">
             <div className="page-left">
                 <h1>Add a New Account</h1>
+                <form className={styles.form} onSubmit={handleSubmit}>
+                    <input type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
+                    <select name="type" disabled={loading} onChange={handleChange}>
+                        <option value="">Account Type*</option>
+                        <option value={AccountType.CHECKING}>CHECKING</option>
+                        <option value={AccountType.SAVINGS}>SAVINGS</option>
+                        <option value={AccountType.CASH}>CASH</option>
+                        <option value={AccountType.OTHER}>OTHER</option>
+                    </select>
+                    <button className="buttonPrimary" type="submit" disabled={loading}>Create</button>
+                    {error && <p>{error}</p>}
+                </form>
             </div>
             <div className="page-right">
                 <h1>My Accounts</h1>
+                {
+                    accounts.map(account => (
+                        <p>{account.name}</p>
+                    ))
+                }
             </div>
         </div>
     )

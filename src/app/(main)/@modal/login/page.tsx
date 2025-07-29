@@ -39,10 +39,11 @@ export default function LoginModal() {
             } catch (err) {
                 setError("An unexpected error occured")
                 console.error(err)
+            } finally {
+                setLoading(false)
             }
         }
         submitLoginRequest()
-        setLoading(false)
     }
 
     return (

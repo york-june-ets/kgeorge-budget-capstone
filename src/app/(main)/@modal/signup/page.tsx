@@ -25,29 +25,30 @@ export default function SignupModal() {
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-            setLoading(true)
-            const submitSignupRequest = async () => {
-                try {
-                    const response = await fetchCreateCustomer(signupRequest)
-                    if (response.ok) {
-                        router.push('/login')
-                    } 
-                    else {
-                        const error = await response.json()
-                        setError(error.message)
-                    }
-                } catch (err) {
-                    setError("An unexpected error occured")
-                    console.error(err)
+        setLoading(true)
+        const submitSignupRequest = async () => {
+            try {
+                const response = await fetchCreateCustomer(signupRequest)
+                if (response.ok) {
+                    router.push('/login')
+                } 
+                else {
+                    const error = await response.json()
+                    setError(error.message)
                 }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            } finally {
+                setLoading(false)
             }
-            if (signupRequest.password === confirmPassword.current?.value) {
-                submitSignupRequest()
-            } else {
-                setError("Passwords do not match")
-            }
-            setLoading(false)
         }
+        if (signupRequest.password === confirmPassword.current?.value) {
+            submitSignupRequest()
+        } else {
+            setError("Passwords do not match")
+        }
+    }
 
     return (
         <>
