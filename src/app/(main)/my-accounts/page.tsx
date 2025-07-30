@@ -23,8 +23,9 @@ export default function MyAccounts() {
                 if (token) {
                     const response = await fetchCustomerAccounts(token)
                     if (response.ok) {
-                        const accounts = await response.json()
-                        setAccounts(accounts)
+                        const data = await response.json()
+                        console.log(data)
+                        setAccounts(data)
                     } else {
                         const error = await response.json()
                         setError(error.message)
@@ -38,7 +39,7 @@ export default function MyAccounts() {
             }
         }
         getCustomerAccounts()
-    }, [refresh])
+    }, [refresh, token])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -98,12 +99,27 @@ export default function MyAccounts() {
                 </form>
             </div>
             <div className="page-right">
-                <h1>My Accounts</h1>
-                {
-                    accounts.map(account => (
-                        <p>{account.name}</p>
-                    ))
-                }
+                <h1 className={styles.title}>My Accounts</h1>
+                <table className={styles.table}>
+                    <thead className={styles.thead}>
+                        <tr className={styles.tr}>
+                            <th className={styles.th}>Name</th>
+                            <th className={styles.th}>Type</th>
+                            <th className={styles.th}>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody className={styles.tbody}>
+                    {
+                        accounts.map(account => (
+                            <tr className={styles.tr} key={account.id}>
+                                <td className={styles.td}>{account.name}</td>
+                                <td className={styles.td}>{account.type}</td>
+                                <td className={styles.td}>${account.balance}</td>
+                            </tr>
+                        ))
+                    }
+                    </tbody>
+                </table>
             </div>
         </div>
     )

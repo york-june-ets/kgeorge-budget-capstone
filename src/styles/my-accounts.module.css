@@ -1,0 +1,31 @@
+.title {
+    margin-top: 100px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 400;
+    color: rgb(42, 42, 124);
+}
+
+.table {
+  width: 80%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  overflow: scroll;
+}
+
+.thead {
+  background: linear-gradient(90deg, #2a4a7d, #2563eb);
+  color: white;
+}
+
+.th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #1e40af;
+}
+
+.td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dbeafe;
+  color: #1e40af;
+}

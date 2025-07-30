@@ -84,7 +84,9 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: flex-start;
-    background-color: white;
+    background-image: url('/page-background.png');
+    background-size: cover;
+    background-position: fixed;
 }
 
 .logout {
