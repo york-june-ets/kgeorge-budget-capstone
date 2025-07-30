@@ -21,3 +21,10 @@
   flex-direction: column;
   gap: 15px;
 }
+
+.form input {
+  border: 1px solid rgb(130, 130, 193);
+  border-radius: 30px;
+  font-size: 15px;
+  padding: 3px 10px;
+}

@@ -1,12 +1,13 @@
 .header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 0 50px 0 50px;
+    padding: 0 50px 30px 50px;
     background-color: white;
+    width: 100%;
+    box-sizing: border-box;
 }
-
+ 
 .buttons {
     display: flex;
     flex-direction: row;
