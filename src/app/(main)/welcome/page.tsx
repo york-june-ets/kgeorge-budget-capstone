@@ -14,7 +14,7 @@ export default function Welcome() {
         <div className={styles.videoWrapper}>
           <video className={styles.backgroundVideo} autoPlay muted playsInline>
             <source src="intro_video.mp4" type="video/mp4" />
-            <img src="/intro_video_fallback.png" alt="fallback image" />
+            <img src="/fallback.png" alt="fallback image" />
           </video>
           <div className={styles.videoFade}></div>
         </div>

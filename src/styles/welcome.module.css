@@ -2,7 +2,6 @@
  
   width: 100vw;
   overflow: hidden;
-  background-color: #111; /* fallback if video fails */
 }
 
 .backgroundLayout {
@@ -10,7 +9,7 @@
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: #1b1b1b; /* right-side background match */
+  background-color: #1b1b1b; 
 }
 
 .videoWrapper {
