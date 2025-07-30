@@ -13,14 +13,60 @@ export default function TableOfContents() {
             <div className="book">
                 <div className={styles.backCover} onClick={() => router.push('/')}></div>
                 <div className="page-right">
-                    <h1 className={styles.title}>Table of Contents</h1>
-                    <ol className={styles.contents}>
-                        <li onClick={() => router.push('/my-accounts')}>Manage Accounts</li>
-                        <li onClick={() => router.push('/my-transactions')}>Manage Transactions</li>
-                        <li onClick={() => router.push('/my-budgets')}>Manage Budgets</li>
-                        <li onClick={() => router.push('/spending-summary')}>Spending Summary</li>
-                        <li onClick={() => router.push('/edit-profile')}>Edit Profile</li>
-                    </ol>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Budget Handbook</h1>
+                        <h1 className={styles.subtitle}>Table of Contents</h1>
+                    </div>
+                        <div className={styles.row}>
+                            <div className={styles.rowLeft}>
+                                <p className={styles.number}>01</p>
+                                <hr className={styles.hr}></hr>
+                            </div>
+                            <div className={styles.text}>
+                                <h3 onClick={() => router.push('/my-accounts')}>Manage Accounts &rarr;</h3>
+                                <p>Create and manage your bank accounts to track your total income and spending per account.</p>
+                            </div>
+                        </div>
+                        <div className={styles.row}>
+                            <div className={styles.rowLeft}>
+                                <p className={styles.number}>02</p>
+                                <hr className={styles.hr}></hr>
+                            </div>
+                            <div className={styles.text}>
+                                <h3 onClick={() => router.push('/my-transactions')}>Manage Transactions &rarr;</h3>
+                                <p>View, log, categorize, and filter your transactions to track your earnings, spending, and saving.</p>
+                            </div>
+                        </div>
+                        <div className={styles.row}>
+                            <div className={styles.rowLeft}>
+                                <p className={styles.number}>03</p>
+                                <hr className={styles.hr}></hr>
+                            </div>
+                            <div className={styles.text}>
+                                <h3 onClick={() => router.push('/my-budgets')}>Manage Budgets &rarr;</h3>
+                                <p>Create and manage budgets to ensure you take advantage of your income and grow your savings.</p>
+                            </div>
+                        </div>
+                        <div className={styles.row}>
+                            <div className={styles.rowLeft}>
+                                <p className={styles.number}>04</p>
+                                <hr className={styles.hr}></hr>
+                            </div>
+                            <div className={styles.text}>
+                                <h3 onClick={() => router.push('/spending-summary')}>Spending Summary &rarr;</h3>
+                                <p>View your spending analytics to help you compare your spending to your spending goals.</p>
+                            </div>
+                        </div>
+                        <div className={styles.row}>
+                            <div className={styles.rowLeft}>
+                                <p className={styles.number}>05</p>
+                                <hr className={styles.hr}></hr>
+                            </div>
+                            <div className={styles.text}>
+                                <h3 onClick={() => router.push('/edit-profile')}>Edit Profile </h3>
+                                <p>Update your profile information or close your account.</p>
+                            </div>
+                        </div>
                 </div>
             </div>
             <button className="logout" onClick={logout}>logout</button>
