@@ -63,7 +63,7 @@ export default function TableOfContents() {
                                 <hr className={styles.hr}></hr>
                             </div>
                             <div className={styles.text}>
-                                <h3 onClick={() => router.push('/edit-profile')}>Edit Profile </h3>
+                                <h3 onClick={() => router.push('/edit-profile')}>Edit Profile &rarr;</h3>
                                 <p>Update your profile information or close your account.</p>
                             </div>
                         </div>
