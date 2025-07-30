@@ -83,7 +83,8 @@ export default function MyAccounts() {
     return (
         <div className="book">
             <div className="page-left">
-                <h1>Add a New Account</h1>
+                <h1 className={styles.title2}>Add a New Account</h1>
+                <div className={styles.formbar}>Please enter your account information below</div>
                 <form className={styles.form} onSubmit={handleSubmit}>
                     <input type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
                     <select name="type" disabled={loading} onChange={handleChange}>
@@ -94,7 +95,7 @@ export default function MyAccounts() {
                         <option value={AccountType.OTHER}>OTHER</option>
                     </select>
                     <input type="text" name="balance" placeholder="0.00" value={accountRequest.balance} onChange={handleChange} disabled={loading} required></input>
-                    <button className="buttonPrimary" type="submit" disabled={loading}>Create</button>
+                    <button className="buttonSecondary" type="submit" disabled={loading}>Create</button>
                     {error && <p>{error}</p>}
                 </form>
             </div>
