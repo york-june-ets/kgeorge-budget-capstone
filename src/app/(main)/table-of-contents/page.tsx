@@ -33,8 +33,8 @@ export default function TableOfContents() {
                                 <hr className={styles.hr}></hr>
                             </div>
                             <div className={styles.text}>
-                                <h3 onClick={() => router.push('/my-transactions')}>Manage Transactions &rarr;</h3>
-                                <p>View, log, categorize, and filter your transactions to track your earnings, spending, and saving.</p>
+                                <h3 onClick={() => router.push('/my-categories')}>Manage Categories &rarr;</h3>
+                                <p>Create and manage spending categories to track how you spend.</p>
                             </div>
                         </div>
                         <div className={styles.row}>
@@ -44,7 +44,7 @@ export default function TableOfContents() {
                             </div>
                             <div className={styles.text}>
                                 <h3 onClick={() => router.push('/my-budgets')}>Manage Budgets &rarr;</h3>
-                                <p>Create and manage budgets to ensure you take advantage of your income and grow your savings.</p>
+                                <p>Create and manage budgets to set spending limits per category and grow your savings.</p>
                             </div>
                         </div>
                         <div className={styles.row}>
@@ -53,8 +53,8 @@ export default function TableOfContents() {
                                 <hr className={styles.hr}></hr>
                             </div>
                             <div className={styles.text}>
-                                <h3 onClick={() => router.push('/spending-summary')}>Spending Summary &rarr;</h3>
-                                <p>View your spending analytics to help you compare your spending to your spending goals.</p>
+                                <h3 onClick={() => router.push('/my-transactions')}>Manage Transactions &rarr;</h3>
+                                <p>View, log, categorize, and filter your transactions to track your earnings, spending, and saving.</p>
                             </div>
                         </div>
                         <div className={styles.row}>
@@ -63,8 +63,8 @@ export default function TableOfContents() {
                                 <hr className={styles.hr}></hr>
                             </div>
                             <div className={styles.text}>
-                                <h3 onClick={() => router.push('/edit-profile')}>Edit Profile &rarr;</h3>
-                                <p>Update your profile information or close your account.</p>
+                                <h3 onClick={() => router.push('/spending-summary')}>Spending Summary &rarr;</h3>
+                                <p>View your spending analytics to help you compare your spending to your spending goals.</p>
                             </div>
                         </div>
                 </div>

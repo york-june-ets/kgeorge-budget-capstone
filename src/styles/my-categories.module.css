@@ -23,20 +23,16 @@
     width: 90%;
 }
 
-.form input, .form select, .form .submit {
+.form input, .form .submit {
     background-color: #edf8ff;
     border: 1px solid black;
     margin: 5px 0;
     padding: 10px 10px;
 }
 
-.name {
-    width: 95%;
-}
-
 .row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 4fr 1fr;
     gap: 20px;
 }
 
@@ -54,9 +50,9 @@
 }
 
 .tr {
-    width: 86%;
+    width: 90%;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr;
     text-align: left;
     margin: auto;
     font-size: 15px;

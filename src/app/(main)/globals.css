@@ -122,3 +122,10 @@
     top:0;
     margin: 20px;
 }
+
+.page-header {
+    background-color: #00328c;
+    width: 100%;
+    height: 100px;
+    margin-top: 70px;
+}
