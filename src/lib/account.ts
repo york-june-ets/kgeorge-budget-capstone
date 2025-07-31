@@ -21,3 +21,27 @@ export const fetchCustomerAccounts = async (token: string) => {
     })
     return response
 }
+
+export const fetchUpdateAccount = async (token: string, accountId: number, request: AccountRequest) =>  {
+    const url = `http://localhost:8080/api/accounts/${accountId}`
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request)
+    })
+    return response
+}
+
+export const fetchArchiveAccount = async (token: string, accountId: number) =>  {
+    const url = `http://localhost:8080/api/accounts/${accountId}`
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    })
+    return response
+}
