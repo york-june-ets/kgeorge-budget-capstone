@@ -1,7 +1,7 @@
 'use client'
 
 import { AuthContext } from "@/context/AuthContext"
-import { fetchCreateCategory, fetchCustomerCategories } from "@/lib/category"
+import { fetchCreateCategory, fetchCustomerCategories, fetchUpdateCategory, fetchArchiveCategory } from "@/lib/category"
 import styles from "@/styles/my-categories.module.css"
 import { Category } from "@/types/Category"
 import { CategoryRequest } from "@/types/CategoryRequest"
@@ -16,6 +16,8 @@ export default function MyCategories() {
     const [categories, setCategories] = useState<Category[]>([])
     const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
+    const [edit, setEdit] = useState<boolean>(false)
+    const [categoryId, setCategoryId] = useState<number | null>(null)
 
     useEffect(() => {
         setLoading(true)
@@ -76,6 +78,50 @@ export default function MyCategories() {
         submitCategoryRequest()
     }
 
+    function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        setLoading(true)
+        const submitEditCategoryRequest = async () => {
+            const nativeEvent = event.nativeEvent as SubmitEvent;
+            const submitter = nativeEvent.submitter as HTMLButtonElement;
+            try {
+                if (token) {
+                    let response;
+                    if (submitter.value === "save") {
+                        response = await fetchUpdateCategory(token, categoryId!, categoryRequest)
+                    } else if (submitter.value === "delete") {
+                        response = await fetchArchiveCategory(token, categoryId!)
+                    } else {
+                        setError('Something went wrong')
+                        return;
+                    }
+                    if (response.ok) {
+                        setRefresh(refresh + 1)
+                    } 
+                    else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        submitEditCategoryRequest()
+        setCategoryId(null)
+        setCategoryRequest({name: ""})
+        setEdit(false)
+    }
+
+    function openEdit(category: Category) {
+            setEdit(true)
+            setCategoryRequest({name: category.name})
+            setCategoryId(category.id)
+    }
+
     return (
         <div className="background">
             <div className="book">
@@ -84,14 +130,31 @@ export default function MyCategories() {
                     <div className="page-header">
                         <h1 className={styles.title}>Category Management</h1>
                     </div>
-                    <h2 className={styles.subtitle}>ADD NEW CATEGORY</h2>
-                    <form className={styles.form} onSubmit={handleSubmit}>
-                        <div className={styles.row}>
-                            <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
-                            <button className={styles.submit} type="submit" disabled={loading}>Create</button>
-                        </div>
-                        {error && <p>{error}</p>}
-                    </form>
+                    { !edit && 
+                        <>
+                            <h2 className={styles.subtitle}>ADD NEW CATEGORY</h2>
+                            <form className={styles.form} onSubmit={handleSubmit}>
+                                <div className={styles.row}>
+                                    <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
+                                    <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                </div>
+                                {error && <p>{error}</p>}
+                            </form>
+                        </>
+                    }
+                    {edit && 
+                        <>
+                            <h2 className={styles.subtitle}>EDIT CATEGORY</h2>
+                            <form className={styles.form} onSubmit={handleEditSubmit}>
+                                <div className={styles.row2}>
+                                    <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
+                                    <button className={styles.submit} type="submit" name="action" value="save" disabled={loading}>Save</button>
+                                    <button className={styles.submit} type="submit" name="action" value="delete" disabled={loading}>Delete</button>
+                                </div>
+                                {error && <p>{error}</p>}
+                            </form>
+                        </>
+                    }
                     <h2 className={styles.subtitle}>VIEW CATEGORIES</h2>
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
@@ -105,6 +168,7 @@ export default function MyCategories() {
                                 categories.map(category => (
                                     <tr className={styles.tr} key={category.id}>
                                         <td className={styles.td}>{category.name}</td>
+                                        <td className={styles.edit} onClick={() => openEdit(category)}>&#8942;</td>
                                     </tr>
                                 ))
                             }

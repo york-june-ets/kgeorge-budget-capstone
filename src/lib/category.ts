@@ -21,3 +21,27 @@ export const fetchCustomerCategories = async (token: string) => {
     })
     return response
 }
+
+export const fetchUpdateCategory = async (token: string, categoryId: number, request: CategoryRequest) =>  {
+    const url = `http://localhost:8080/api/categories/${categoryId}`
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request)
+    })
+    return response
+}
+
+export const fetchArchiveCategory = async (token: string, categoryId: number) =>  {
+    const url = `http://localhost:8080/api/categories/${categoryId}`
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    })
+    return response
+}

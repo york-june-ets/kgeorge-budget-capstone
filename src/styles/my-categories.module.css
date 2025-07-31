@@ -36,10 +36,16 @@
     gap: 20px;
 }
 
+.row2 {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr;
+    gap: 20px;
+}
+
 .tableWrapper {
     width: 100%;
     overflow-y:scroll;
-    max-height: 156px;
+    max-height: 195px;
 }
 .table {
     border-collapse: collapse;
@@ -52,7 +58,7 @@
 .tr {
     width: 90%;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr .02fr;
     text-align: left;
     margin: auto;
     font-size: 15px;
@@ -62,4 +68,8 @@
     padding: 10px 10px;
     background-color: #edf8ff;
     border: 1px solid #4a494926;
+}
+
+.edit {
+    margin-top: 10px;
 }

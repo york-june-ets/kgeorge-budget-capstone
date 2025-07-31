@@ -88,7 +88,7 @@ export default function MyAccounts() {
     function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setLoading(true)
-        const submitEditRequest = async () => {
+        const submitEditAccountRequest = async () => {
             const nativeEvent = event.nativeEvent as SubmitEvent;
             const submitter = nativeEvent.submitter as HTMLButtonElement;
             try {
@@ -117,7 +117,7 @@ export default function MyAccounts() {
                 setLoading(false)
             }
         }
-        submitEditRequest()
+        submitEditAccountRequest()
         setAccountId(null)
         setAccountRequest({name: "", type: "", balance: "0.00"})
         setEdit(false)
