@@ -131,7 +131,8 @@ export default function MyAccounts() {
                     </div>
                 </div>
             </div>
-            <button className="logout" onClick={logout}>logout</button>
+            <button className="toc" onClick={() => router.push('/table-of-contents')}>Table of Contents</button>
+            <button className="logout" onClick={logout}>Logout</button>
         </div>
     )
 }
