@@ -85,45 +85,50 @@ export default function MyAccounts() {
     return (
         <div className="background">
             <div className="book">
-                <div className="page-left">
-                    <h1 className={styles.title2}>Add a New Account</h1>
-                    <div className={styles.formbar}>Please enter your account information below</div>
+                <div className="page-left"></div>
+                <div className="page-right">
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Account Management</h1>
+                    </div>
+                    <h2 className={styles.subtitle}>ADD NEW ACCOUNT</h2>
                     <form className={styles.form} onSubmit={handleSubmit}>
-                        <input type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
-                        <select name="type" disabled={loading} onChange={handleChange}>
-                            <option value="">Account Type*</option>
-                            <option value={AccountType.CHECKING}>CHECKING</option>
-                            <option value={AccountType.SAVINGS}>SAVINGS</option>
-                            <option value={AccountType.CASH}>CASH</option>
-                            <option value={AccountType.OTHER}>OTHER</option>
-                        </select>
-                        <input type="text" name="balance" placeholder="0.00" value={accountRequest.balance} onChange={handleChange} disabled={loading} required></input>
-                        <button className="buttonSecondary" type="submit" disabled={loading}>Create</button>
+                        <input className={styles.name} type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
+                        <div className={styles.row}>
+                            <select className={styles.dropdown} name="type" disabled={loading} onChange={handleChange}>
+                                <option value="">Account Type*</option>
+                                <option value={AccountType.CHECKING}>CHECKING</option>
+                                <option value={AccountType.SAVINGS}>SAVINGS</option>
+                                <option value={AccountType.CASH}>CASH</option>
+                                <option value={AccountType.OTHER}>OTHER</option>
+                            </select>
+                            <input className={styles.balance} type="text" name="balance" placeholder="0.00" value={accountRequest.balance} onChange={handleChange} disabled={loading} required></input>
+                            <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                        </div>
                         {error && <p>{error}</p>}
                     </form>
-                </div>
-                <div className="page-right">
-                    <h1 className={styles.title}>My Accounts</h1>
-                    <table className={styles.table}>
-                        <thead className={styles.thead}>
-                            <tr className={styles.tr}>
-                                <th className={styles.th}>Name</th>
-                                <th className={styles.th}>Type</th>
-                                <th className={styles.th}>Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody className={styles.tbody}>
-                        {
-                            accounts.map(account => (
-                                <tr className={styles.tr} key={account.id}>
-                                    <td className={styles.td}>{account.name}</td>
-                                    <td className={styles.td}>{account.type}</td>
-                                    <td className={styles.td}>${account.balance}</td>
+                    <h2 className={styles.subtitle}>VIEW ACCOUNTS</h2>
+                    <div className={styles.tableWrapper}>
+                        <table className={styles.table}>
+                            <thead className={styles.thead}>
+                                <tr className={styles.tr}>
+                                    <th className={styles.th}>Name</th>
+                                    <th className={styles.th}>Type</th>
+                                    <th className={styles.th}>Balance</th>
                                 </tr>
-                            ))
-                        }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className={styles.tbody}>
+                            {
+                                accounts.map(account => (
+                                    <tr className={styles.tr} key={account.id}>
+                                        <td className={styles.td}>{account.name}</td>
+                                        <td className={styles.td}>{account.type}</td>
+                                        <td className={styles.td}>${account.balance}</td>
+                                    </tr>
+                                ))
+                            }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <button className="logout" onClick={logout}>logout</button>
