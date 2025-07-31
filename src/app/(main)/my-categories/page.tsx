@@ -132,7 +132,7 @@ export default function MyCategories() {
                     </div>
                     { !edit && 
                         <>
-                            <h2 className={styles.subtitle}>ADD NEW CATEGORY</h2>
+                            <h2 className="subtitle">ADD NEW CATEGORY</h2>
                             <form className={styles.form} onSubmit={handleSubmit}>
                                 <div className={styles.row}>
                                     <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
@@ -144,7 +144,7 @@ export default function MyCategories() {
                     }
                     {edit && 
                         <>
-                            <h2 className={styles.subtitle}>EDIT CATEGORY</h2>
+                            <h2 className="subtitle">EDIT CATEGORY</h2>
                             <form className={styles.form} onSubmit={handleEditSubmit}>
                                 <div className={styles.row2}>
                                     <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
@@ -155,7 +155,7 @@ export default function MyCategories() {
                             </form>
                         </>
                     }
-                    <h2 className={styles.subtitle}>VIEW CATEGORIES</h2>
+                    <h2 className="subtitle">VIEW CATEGORIES</h2>
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead className={styles.thead}>

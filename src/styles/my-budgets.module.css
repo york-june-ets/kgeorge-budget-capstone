@@ -6,3 +6,73 @@
     margin: 10px 0 0 50px;
     width: 270px;
 }
+
+.title {
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 300;
+    font-size: 35px;
+    margin: 10px 0 0 50px;
+    width: 100px;
+}
+
+.form {
+    width: 90%;
+}
+
+.form input, .form select, .form .submit {
+    background-color: #edf8ff;
+    border: 1px solid black;
+    margin: 5px 0;
+    padding: 10px 10px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+}
+
+
+.row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.category {
+    width: 100%;
+}
+
+.tableWrapper {
+    width: 100%;
+    overflow-y:scroll;
+    max-height: 156px;
+}
+
+.table {
+    border-collapse: collapse;
+}
+
+.table, .thead {
+    width: 100%;
+}
+
+.tr {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.1fr;
+    text-align: left;
+    margin: auto;
+    font-size: 15px;
+}
+
+.th, .td {
+    padding: 10px 10px;
+    background-color: #edf8ff;
+    border: 1px solid #4a494926;
+}
+
+.edit {
+    margin-top: 10px;
+}

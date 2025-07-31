@@ -140,7 +140,7 @@ export default function MyAccounts() {
                     </div>
                     {!edit && 
                         <>
-                            <h2 className={styles.subtitle}>ADD NEW ACCOUNT</h2>
+                            <h2 className="subtitle">ADD NEW ACCOUNT</h2>
                             <form className={styles.form} onSubmit={handleSubmit}>
                                 <input className={styles.name} type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
                                 <div className={styles.row}>
@@ -160,7 +160,7 @@ export default function MyAccounts() {
                     }
                     {edit &&
                         <>
-                            <h2 className={styles.subtitle}>EDIT ACCOUNT</h2>
+                            <h2 className="subtitle">EDIT ACCOUNT</h2>
                             <form className={styles.form} onSubmit={handleEditSubmit}>
                                 <input className={styles.name} type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
                                 <div className={styles.row2}>
@@ -179,7 +179,7 @@ export default function MyAccounts() {
                             </form>
                         </>
                     }
-                    <h2 className={styles.subtitle}>VIEW ACCOUNTS</h2>
+                    <h2 className="subtitle">VIEW ACCOUNTS</h2>
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead className={styles.thead}>
