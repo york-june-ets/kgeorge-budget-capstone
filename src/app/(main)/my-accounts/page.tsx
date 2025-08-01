@@ -168,8 +168,6 @@ export default function MyAccounts() {
                                     <th className={styles.th}>Balance</th>
                                 </tr>
                             </thead>
-                            {loadingAccounts && <p>Loading Accounts, please wait...</p>}
-                            {accountError && <p>{accountError}</p>}
                             <tbody className={styles.tbody}>
                             {
                                 accounts.map(account => (
@@ -183,6 +181,8 @@ export default function MyAccounts() {
                             }
                             </tbody>
                         </table>
+                        {loadingAccounts && <p>Loading Accounts, please wait...</p>}
+                        {accountError && <p>{accountError}</p>}
                     </div>
                 </div>
             </div>

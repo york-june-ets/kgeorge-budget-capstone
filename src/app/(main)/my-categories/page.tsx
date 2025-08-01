@@ -138,8 +138,6 @@ export default function MyCategories() {
                                     <th className={styles.th}>Name</th>
                                 </tr>
                             </thead>
-                            {loadingCategories && <p>Loading categories, please wait...</p>}
-                            {categoryError && <p>{categoryError}</p>}
                             <tbody className={styles.tbody}>
                             {
                                 categories.map(category => (
@@ -151,6 +149,8 @@ export default function MyCategories() {
                             }
                             </tbody>
                         </table>
+                        {loadingCategories && <p>Loading categories, please wait...</p>}
+                        {categoryError && <p>{categoryError}</p>}
                     </div>
                 </div>
             </div>

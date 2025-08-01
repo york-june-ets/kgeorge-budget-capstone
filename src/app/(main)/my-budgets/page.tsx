@@ -182,8 +182,6 @@ export default function MyBudgets() {
                                     <th className={styles.th}>Limit/Time Period</th>
                                 </tr>
                             </thead>
-                            {loadingBudgets && <p>Loading Budgets, please wait...</p>}
-                            {budgetError && <p>{budgetError}</p>}
                             <tbody className={styles.tbody}>
                             {
                                 budgets.map(budget => (
@@ -196,6 +194,8 @@ export default function MyBudgets() {
                             }
                             </tbody>
                         </table>
+                        {loadingBudgets && <p>Loading Budgets, please wait...</p>}
+                        {budgetError && <p>{budgetError}</p>}
                     </div>
                 </div>
             </div>
