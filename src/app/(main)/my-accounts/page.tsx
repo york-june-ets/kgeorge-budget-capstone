@@ -8,7 +8,7 @@ import { Account } from "@/types/Account"
 import { AccountRequest } from "@/types/AccountRequest"
 import { AccountType } from "@/types/AccountType"
 import { useRouter } from "next/navigation"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 
 export default function MyAccounts() {
     const [error, setError] = useState<String>("")
@@ -159,6 +159,8 @@ export default function MyAccounts() {
                         </>
                     }
                     <h2 className="subtitle">VIEW ACCOUNTS</h2>
+                    {loadingAccounts && <p>Loading Accounts, please wait...</p>}
+                    {accountError && <p>{accountError}</p>}
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead className={styles.thead}>

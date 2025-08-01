@@ -9,21 +9,21 @@ interface AccountContextValue {
     accounts: Account[]
     refresh: () => void
     loadingAccounts: boolean
-    accountError: Error | string | null
+    accountError: string
 }
 
 export const AccountContext = createContext<AccountContextValue>({
     accounts: [],
     refresh: () => {},
     loadingAccounts: false,
-    accountError: null
+    accountError: ""
 })
 
 export const AccountProvider: React.FC<{children: ReactNode}> = ({children}) => {
     const [accounts, setAccounts] = useState<Account[]>([])
     const [loadingAccounts, setLoadingAccounts] = useState<boolean>(true)
     const {token} = useContext(AuthContext)
-    const [accountError, setAccountError] = useState<Error | string | null>(null)
+    const [accountError, setAccountError] = useState<string>("")
     const [refreshVal, setRefreshVal] = useState<number>(0)
 
     useEffect(() => {
