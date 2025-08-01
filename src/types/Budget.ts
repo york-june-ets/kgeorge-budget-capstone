@@ -3,7 +3,6 @@ import { TimePeriod } from "./TimePeriod"
 export type Budget = {
     id: number
     category: string
-    limit: number
+    budgetLimit: number
     timePeriod: TimePeriod
-    enabled: boolean
 }

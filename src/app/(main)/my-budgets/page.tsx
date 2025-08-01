@@ -1,7 +1,7 @@
 'use client'
 
 import { AuthContext } from "@/context/AuthContext"
-import { fetchCreateBudget } from "@/lib/budget"
+import { fetchCreateBudget, fetchCustomerBudgets } from "@/lib/budget"
 import { fetchCustomerCategories } from "@/lib/category"
 import styles from "@/styles/my-budgets.module.css"
 import { Budget } from "@/types/Budget"
@@ -15,7 +15,7 @@ export default function MyBudgets() {
     const [error, setError] = useState<String>("")
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
-    const [budgetRequest, setBudgetRequest] = useState<BudgetRequest>({category: "", limit: "", timePeriod: ""})
+    const [budgetRequest, setBudgetRequest] = useState<BudgetRequest>({category: "", budgetLimit: "", timePeriod: ""})
     const [budgets, setBudgets] = useState<Budget[]>([])
     const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
@@ -31,7 +31,6 @@ export default function MyBudgets() {
                     const response = await fetchCustomerCategories(token)
                     if (response.ok) {
                         const data = await response.json()
-                        console.log(data)
                         setCategories(data)
                     } else {
                         const error = await response.json()
@@ -46,6 +45,30 @@ export default function MyBudgets() {
             }
         }
         getCustomerCategories()
+    }, [refresh, token])
+
+    useEffect(() => {
+        setLoading(true)
+        const getCustomerBudgets = async () => {
+            try {
+                if (token) {
+                    const response = await fetchCustomerBudgets(token)
+                    if (response.ok) {
+                        const data = await response.json()
+                        setBudgets(data)
+                    } else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                }
+            } catch (err) {
+                setError("An unexpected error occurred")
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        getCustomerBudgets()
     }, [refresh, token])
     
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -76,7 +99,7 @@ export default function MyBudgets() {
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
         const {name, value} = event.target
-        if (name === "limit") {
+        if (name === "budgetLimit") {
             // Accept: empty string or numbers with up to 2 decimal places
             const regex = /^\d*(\.\d{0,2})?$/
             if (!regex.test(value)) return
@@ -89,7 +112,7 @@ export default function MyBudgets() {
 
     function openEdit(budget: Budget) {
         setEdit(true)
-        setBudgetRequest({category: "", limit: "", timePeriod: ""})
+        setBudgetRequest({category: "", budgetLimit: "", timePeriod: ""})
         setBudgetId(budget.id)
     }
 
@@ -103,9 +126,9 @@ export default function MyBudgets() {
                     </div>
                     {!edit && 
                         <>
-                            <h2 className="subtitle">ADD NEW ACCOUNT</h2>
+                            <h2 className="subtitle">ADD NEW BUDGET</h2>
                             <form className={styles.form} onSubmit={handleSubmit}>
-                                <select className={styles.category} name="timePeriod" disabled={loading} onChange={handleChange}>
+                                <select className={styles.category} name="category" disabled={loading} onChange={handleChange}>
                                     <option value="">Category*</option>
                                     {
                                         categories.map(category => (
@@ -114,7 +137,7 @@ export default function MyBudgets() {
                                     }
                                 </select>
                                 <div className={styles.row}>
-                                    <input className={styles.limit} type="text" name="limit" placeholder="0.00" value={budgetRequest.limit} onChange={handleChange} disabled={loading} required></input>
+                                    <input className={styles.limit} type="text" name="budgetLimit" placeholder="0.00" value={budgetRequest.budgetLimit} onChange={handleChange} disabled={loading} required></input>
                                     <select className={styles.dropdown} name="timePeriod" disabled={loading} onChange={handleChange}>
                                         <option value="">Time Period*</option>
                                         <option value={TimePeriod.MONTH}>MONTH</option>
@@ -127,7 +150,7 @@ export default function MyBudgets() {
                             </form>
                         </>
                     }
-                    <h2 className="subtitle">VIEW ACCOUNTS</h2>
+                    <h2 className="subtitle">VIEW BUDGETS</h2>
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead className={styles.thead}>
@@ -141,7 +164,7 @@ export default function MyBudgets() {
                                 budgets.map(budget => (
                                     <tr className={styles.tr} key={budget.id}>
                                         <td className={styles.td}>{budget.category}</td>
-                                        <td className={styles.td}>${budget.limit} / {budget.timePeriod}</td>
+                                        <td className={styles.td}>${budget.budgetLimit} / {budget.timePeriod}</td>
                                         <td className={styles.edit} onClick={() => openEdit(budget)}>&#8942;</td>
                                     </tr>
                                 ))

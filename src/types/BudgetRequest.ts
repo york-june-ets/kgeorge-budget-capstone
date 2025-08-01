@@ -2,6 +2,6 @@ import { TimePeriod } from "./TimePeriod"
 
 export type BudgetRequest = {
     category: string
-    limit: string
+    budgetLimit: string
     timePeriod: TimePeriod | ""
 }
