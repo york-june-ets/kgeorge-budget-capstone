@@ -1,5 +1,6 @@
 'use client'
 
+import { AccountContext } from "@/context/AccountContext"
 import { AuthContext } from "@/context/AuthContext"
 import { fetchCreateAccount, fetchCustomerAccounts, fetchArchiveAccount, fetchUpdateAccount } from "@/lib/account"
 import styles from "@/styles/my-accounts.module.css"
@@ -14,37 +15,38 @@ export default function MyAccounts() {
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [accountRequest, setAccountRequest] = useState<AccountRequest>({name: "", type: "", balance: "0.00"})
-    const [accounts, setAccounts] = useState<Account[]>([])
-    const [refresh, setRefresh] = useState<number>(0)
+    // const [accounts, setAccounts] = useState<Account[]>([])
+    // const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [selectedOption, setSelectedOption] = useState("")
     const [accountId, setAccountId] = useState<number | null>(null)
+    const {accounts, refresh, loadingAccounts, accountError} = useContext(AccountContext)
 
-    useEffect(() => {
-        setLoading(true)
-        const getCustomerAccounts = async () => {
-            try {
-                if (token) {
-                    const response = await fetchCustomerAccounts(token)
-                    if (response.ok) {
-                        const data = await response.json()
-                        console.log(data)
-                        setAccounts(data)
-                    } else {
-                        const error = await response.json()
-                        setError(error.message)
-                    }
-                }
-            } catch (err) {
-                setError("An unexpected error occurred")
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getCustomerAccounts()
-    }, [refresh, token])
+    // useEffect(() => {
+    //     setLoading(true)
+    //     const getCustomerAccounts = async () => {
+    //         try {
+    //             if (token) {
+    //                 const response = await fetchCustomerAccounts(token)
+    //                 if (response.ok) {
+    //                     const data = await response.json()
+    //                     console.log(data)
+    //                     setAccounts(data)
+    //                 } else {
+    //                     const error = await response.json()
+    //                     setError(error.message)
+    //                 }
+    //             }
+    //         } catch (err) {
+    //             setError("An unexpected error occurred")
+    //             console.error(err)
+    //         } finally {
+    //             setLoading(false)
+    //         }
+    //     }
+    //     getCustomerAccounts()
+    // }, [refresh, token])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -72,7 +74,8 @@ export default function MyAccounts() {
                 if (token) {
                     const response = await fetchCreateAccount(token, accountRequest)
                     if (response.ok) {
-                        setRefresh(refresh + 1)
+                        // setRefresh(refresh + 1)
+                        refresh()
                     } 
                     else {
                         const error = await response.json()
@@ -107,7 +110,8 @@ export default function MyAccounts() {
                         return;
                     }
                     if (response.ok) {
-                        setRefresh(refresh + 1)
+                        // setRefresh(refresh + 1)
+                        refresh()
                     } 
                     else {
                         const error = await response.json()
