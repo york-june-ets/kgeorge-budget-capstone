@@ -159,8 +159,6 @@ export default function MyAccounts() {
                         </>
                     }
                     <h2 className="subtitle">VIEW ACCOUNTS</h2>
-                    {loadingAccounts && <p>Loading Accounts, please wait...</p>}
-                    {accountError && <p>{accountError}</p>}
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead className={styles.thead}>
@@ -170,6 +168,8 @@ export default function MyAccounts() {
                                     <th className={styles.th}>Balance</th>
                                 </tr>
                             </thead>
+                            {loadingAccounts && <p>Loading Accounts, please wait...</p>}
+                            {accountError && <p>{accountError}</p>}
                             <tbody className={styles.tbody}>
                             {
                                 accounts.map(account => (

@@ -1,6 +1,7 @@
 'use client'
 
 import { AuthContext } from "@/context/AuthContext"
+import { CategoryContext } from "@/context/CategoryContext"
 import { fetchCreateCategory, fetchCustomerCategories, fetchUpdateCategory, fetchArchiveCategory } from "@/lib/category"
 import styles from "@/styles/my-categories.module.css"
 import { Category } from "@/types/Category"
@@ -13,36 +14,10 @@ export default function MyCategories() {
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [categoryRequest, setCategoryRequest] = useState<CategoryRequest>({name: ""})
-    const [categories, setCategories] = useState<Category[]>([])
-    const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [categoryId, setCategoryId] = useState<number | null>(null)
-
-    useEffect(() => {
-        setLoading(true)
-        const getCustomerCategories = async () => {
-            try {
-                if (token) {
-                    const response = await fetchCustomerCategories(token)
-                    if (response.ok) {
-                        const data = await response.json()
-                        console.log(data)
-                        setCategories(data)
-                    } else {
-                        const error = await response.json()
-                        setError(error.message)
-                    }
-                }
-            } catch (err) {
-                setError("An unexpected error occurred")
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getCustomerCategories()
-    }, [refresh, token])
+    const {categories, refresh, loadingCategories, categoryError} = useContext(CategoryContext)
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -61,7 +36,7 @@ export default function MyCategories() {
                 if (token) {
                     const response = await fetchCreateCategory(token, categoryRequest)
                     if (response.ok) {
-                        setRefresh(refresh + 1)
+                        refresh()
                     } 
                     else {
                         const error = await response.json()
@@ -96,7 +71,7 @@ export default function MyCategories() {
                         return;
                     }
                     if (response.ok) {
-                        setRefresh(refresh + 1)
+                        refresh()
                     } 
                     else {
                         const error = await response.json()
@@ -163,6 +138,8 @@ export default function MyCategories() {
                                     <th className={styles.th}>Name</th>
                                 </tr>
                             </thead>
+                            {loadingCategories && <p>Loading categories, please wait...</p>}
+                            {categoryError && <p>{categoryError}</p>}
                             <tbody className={styles.tbody}>
                             {
                                 categories.map(category => (
