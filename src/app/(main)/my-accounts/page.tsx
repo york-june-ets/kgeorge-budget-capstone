@@ -54,10 +54,14 @@ export default function MyAccounts() {
             const regex = /^\d*(\.\d{0,2})?$/
             if (!regex.test(value)) return
         }
+        if (edit && name === "type") {
+            setSelectedOption(value) 
+        }
         setAccountRequest(prev => ({
             ...prev,
             [name]: value
         }))
+        
     }
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
