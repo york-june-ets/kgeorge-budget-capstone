@@ -1,6 +1,8 @@
 'use client'
 
 import { AuthContext } from "@/context/AuthContext"
+import { BudgetContext } from "@/context/BudgetContext"
+import { CategoryContext } from "@/context/CategoryContext"
 import { fetchArchiveBudget, fetchCreateBudget, fetchCustomerBudgets, fetchUpdateBudget } from "@/lib/budget"
 import { fetchCustomerCategories } from "@/lib/category"
 import styles from "@/styles/my-budgets.module.css"
@@ -16,62 +18,13 @@ export default function MyBudgets() {
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [budgetRequest, setBudgetRequest] = useState<BudgetRequest>({category: "", budgetLimit: "", timePeriod: ""})
-    const [budgets, setBudgets] = useState<Budget[]>([])
-    const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [budgetId, setBudgetId] = useState<number | null>(null)
-    const [categories, setCategories] = useState<Category[]>([])
     const [selectedTimePeriod, setSelectedTimePeriod] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("")
-    
-    useEffect(() => {
-        setLoading(true)
-        const getCustomerCategories = async () => {
-            try {
-                if (token) {
-                    const response = await fetchCustomerCategories(token)
-                    if (response.ok) {
-                        const data = await response.json()
-                        setCategories(data)
-                    } else {
-                        const error = await response.json()
-                        setError(error.message)
-                    }
-                }
-            } catch (err) {
-                setError("An unexpected error occurred")
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getCustomerCategories()
-    }, [refresh, token])
-
-    useEffect(() => {
-        setLoading(true)
-        const getCustomerBudgets = async () => {
-            try {
-                if (token) {
-                    const response = await fetchCustomerBudgets(token)
-                    if (response.ok) {
-                        const data = await response.json()
-                        setBudgets(data)
-                    } else {
-                        const error = await response.json()
-                        setError(error.message)
-                    }
-                }
-            } catch (err) {
-                setError("An unexpected error occurred")
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        getCustomerBudgets()
-    }, [refresh, token])
+    const {budgets, refresh, loadingBudgets, budgetError} = useContext(BudgetContext)
+    const {categories} = useContext(CategoryContext)
     
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -81,7 +34,7 @@ export default function MyBudgets() {
                 if (token) {
                     const response = await fetchCreateBudget(token, budgetRequest)
                     if (response.ok) {
-                        setRefresh(refresh + 1)
+                        refresh()
                     } 
                     else {
                         const error = await response.json()
@@ -116,7 +69,7 @@ export default function MyBudgets() {
                         return;
                     }
                     if (response.ok) {
-                        setRefresh(refresh + 1)
+                        refresh()
                     } 
                     else {
                         const error = await response.json()
@@ -229,6 +182,8 @@ export default function MyBudgets() {
                                     <th className={styles.th}>Limit/Time Period</th>
                                 </tr>
                             </thead>
+                            {loadingBudgets && <p>Loading Budgets, please wait...</p>}
+                            {budgetError && <p>{budgetError}</p>}
                             <tbody className={styles.tbody}>
                             {
                                 budgets.map(budget => (
