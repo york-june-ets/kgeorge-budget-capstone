@@ -55,7 +55,7 @@
     grid-template-columns: 2fr 1fr 1fr 0.1fr;
     text-align: left;
     margin: auto;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .th, .td {

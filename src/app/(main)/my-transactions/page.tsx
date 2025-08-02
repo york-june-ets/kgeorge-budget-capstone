@@ -233,6 +233,8 @@ export default function MyTransactions() {
                             }
                             </tbody>
                         </table>
+                        {loadingTransactions && <p>Loading Trasactions, please wait...</p>}
+                        {transactionError && <p>{transactionError}</p>}
                     </div>
                 </div>
             </div>
