@@ -1,14 +1,14 @@
 import { RepeatUnit } from "./RepeatUnit"
 import { TransactionType } from "./TransactionType"
 import { AllocationRequest } from "./AllocationRequest"
+import { Account } from "./Account"
 
 export type Transaction = {
-    transactionId: number
-    accountId: number
+    id: number
+    account: Account
     description: string
-    allocations: AllocationRequest[] | null
     amount: string
-    type: TransactionType | null
-    repeatUnit: RepeatUnit | null
+    transactionType: TransactionType
+    repeatUnit: RepeatUnit
     repeatInterval: string
 }

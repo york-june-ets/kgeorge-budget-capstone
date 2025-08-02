@@ -12,6 +12,7 @@ import { TransactionType } from "@/types/TransactionType"
 import { RepeatUnit } from "@/types/RepeatUnit"
 import { CategoryContext } from "@/context/CategoryContext"
 import { fetchCreateTransaction } from "@/lib/transaction"
+import { TransactionContext } from "@/context/TransactionContext"
 
 export default function MyTransactions() {
     const [error, setError] = useState<String>("")
@@ -26,13 +27,13 @@ export default function MyTransactions() {
         repeatUnit: "", 
         repeatInterval: "" 
     })
-    const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [transactionId, setTransactionId] = useState<number | null>(null)
     const [withdrawal, setWithdrawal] = useState<boolean>(false)
     const {accounts, loadingAccounts} = useContext(AccountContext)
     const {categories, loadingCategories} = useContext(CategoryContext)
+    const {transactions, loadingTransactions, refresh, transactionError} = useContext(TransactionContext)
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -95,29 +96,48 @@ export default function MyTransactions() {
     }
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-            event.preventDefault()
-            setLoading(true)
-            const submitAccountRequest = async () => {
-                try {
-                    if (token) {
-                        const response = await fetchCreateTransaction(token, transactionRequest)
-                        if (response.ok) {
-                            // refresh()
-                        } 
-                        else {
-                            const error = await response.json()
-                            setError(error.message)
-                        }
+        event.preventDefault()
+        setLoading(true)
+        const submitAccountRequest = async () => {
+            try {
+                if (token) {
+                    const response = await fetchCreateTransaction(token, transactionRequest)
+                    if (response.ok) {
+                        refresh()
+                    } 
+                    else {
+                        const error = await response.json()
+                        setError(error.message)
                     }
-                } catch (err) {
-                    setError("An unexpected error occured")
-                    console.error(err)
-                } finally {
-                    setLoading(false)
                 }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            } finally {
+                setLoading(false)
             }
-            submitAccountRequest()
         }
+        submitAccountRequest()
+    }
+
+    function getSymbol(transactionType: "DEPOSIT" | "WITHDRAWAL"): String {
+        if (transactionType === "DEPOSIT") {return "+"}
+        return "-"
+    }
+
+    function openEdit(transaction: Transaction) {
+        setEdit(true)
+        setTransactionRequest({
+            accountId: null,
+            description: "",
+            allocations: [],
+            amount: "",
+            transactionType: null, 
+            repeatUnit: "", 
+            repeatInterval: "" 
+        })
+        setTransactionId(transaction.id)
+    }
 
     return (
         <div className="background">
@@ -186,16 +206,24 @@ export default function MyTransactions() {
                         <table className={styles.table}>
                             <thead className={styles.thead}>
                                 <tr className={styles.tr}>
-                                    
+                                    <th className={styles.th}>Description</th>
+                                    <th className={styles.th}>Account</th>
+                                    <th className={styles.th}>Amount</th>
+                                    <th className={styles.th}>Repeat</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.tbody}>
-                            {/* {
+                            {
                                 transactions.map(transaction => (
                                     <tr className={styles.tr} key={transaction.id}>
+                                        <td className={styles.td}>{transaction.description}</td>
+                                        <td className={styles.td}>{transaction.account.name}</td>
+                                        <td className={styles.td}>{getSymbol(transaction.transactionType)} ${transaction.amount}</td>
+                                        <td className={styles.td}>{transaction.repeatInterval} {transaction.repeatUnit}</td>
+                                        <td className={styles.edit} onClick={() => openEdit(transaction)}>&#8942;</td>
                                     </tr>
                                 ))
-                            } */}
+                            }
                             </tbody>
                         </table>
                     </div>

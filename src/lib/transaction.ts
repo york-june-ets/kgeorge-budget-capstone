@@ -12,3 +12,12 @@ export const fetchCreateTransaction = async (token: string, request: Transaction
     })
     return response
 }
+
+export const fetchCustomerTransactions = async (token: string) => {
+    const url = `http://localhost:8080/api/transactions`
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {'Authorization': `Bearer ${token}`}
+    })
+    return response
+}
