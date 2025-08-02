@@ -7,6 +7,10 @@ import { TransactionRequest } from "@/types/TransactionRequest"
 import { useRouter } from "next/navigation"
 import { useContext, useState } from "react"
 import styles from "@/styles/my-transactions.module.css"
+import { AccountContext } from "@/context/AccountContext"
+import { TransactionType } from "@/types/TransactionType"
+import { RepeatUnit } from "@/types/RepeatUnit"
+import { CategoryContext } from "@/context/CategoryContext"
 
 export default function MyTransactions() {
     const [error, setError] = useState<String>("")
@@ -21,27 +25,78 @@ export default function MyTransactions() {
         repeatUnit: null, 
         repeatInterval: "" 
     })
-    const [transactions, setTransactions] = useState<Transaction[]>([])
     const [refresh, setRefresh] = useState<number>(0)
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [transactionId, setTransactionId] = useState<number | null>(null)
-    const [categories, setCategories] = useState<Category[]>([])
     const [withdrawal, setWithdrawal] = useState<boolean>(false)
+    const {accounts, loadingAccounts} = useContext(AccountContext)
+    const {categories, loadingCategories} = useContext(CategoryContext)
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
         const {name, value} = event.target
-        if (name === "amount") {
-            // Accept: empty string or numbers with up to 2 decimal places
-            const regex = /^\d*(\.\d{0,2})?$/
-            if (!regex.test(value)) return
+        if (name === "repeatInterval") {
+            // Accept: empty string or numbers (ints)
+            const regex = /^\d*$/
+            if (!regex.test(value)) return 
+        }
+        if (name === "type") {
+            if (value === "WITHDRAWAL") {setWithdrawal(true)}
+            else {setWithdrawal(false)}
         }
         setTransactionRequest(prev => ({
             ...prev,
             [name]: value
         }))
     }
+
+    function handleAllocationChange(index: number, name: "category" | "amount", value: string) {
+        if (name === "amount") {
+            // Accept: numbers with up to 2 decimal places
+            const regex = /^\d*(\.\d{0,2})?$/
+            if (!regex.test(value)) return
+        }
+
+        const updatedAllocations = [...transactionRequest.allocations]
+        updatedAllocations[index] = {
+            ...updatedAllocations[index],
+            [name]: value
+        }
+
+        setTransactionRequest(prev => {
+            let updated = {
+                ...prev, 
+                allocations: updatedAllocations,
+            }
+
+            if (withdrawal) {
+                let total = 0
+                for (let i = 0; i < updatedAllocations.length; i++) {
+                    const allocation = updatedAllocations[i]
+                    const amount = allocation.amount ? parseFloat(allocation.amount) : 0
+                    total += amount
+                }
+                updated = {
+                    ...prev, 
+                    allocations: updatedAllocations,
+                    amount: total.toFixed(2)
+                }
+            }
+            return updated
+        })
+    }
+
+    function handleAddAllocation() {
+        setTransactionRequest(prev => ({
+            ...prev,
+            allocations: [...prev.allocations, { category: "", amount: "" }]
+        }))
+    }
+
+
+
+
 
     return (
         <div className="background">
@@ -55,9 +110,51 @@ export default function MyTransactions() {
                         <>
                             <h2 className="subtitle">ADD NEW TRANSACTION</h2>
                             <form className={styles.form}>
-                                <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
-                                <div className={styles.row}>
-                                    <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                {withdrawal && 
+                                    <div className={styles.formLeft}>
+                                        {transactionRequest.allocations.map((allocation, index) => (
+                                            <div key={index} className={styles.allocationRow}>
+                                                <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)}disabled={loadingCategories || loading}>
+                                                    <option value="">Category*</option>
+                                                    {
+                                                        categories.map((category) => (
+                                                            <option key={category.id} value={category.name}>{category.name}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                                <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)}disabled={loading} required/>
+                                            </div>
+                                        ))}
+                                        <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
+                                </div>
+                                }
+                                <div className={styles.formRight}>
+                                    <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
+                                    <div className={styles.grid}>
+                                        <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
+                                        <select className={styles.account} name="account" disabled={loadingAccounts || loading} onChange={handleChange}>
+                                            <option value="">Account*</option>
+                                            {
+                                                accounts.map(account => (
+                                                    <option key={account.id} value={account.name}>{account.name}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        <select className={styles.dropdown} name="type" disabled={loading} onChange={handleChange}>
+                                            <option value="">Transaction Type*</option>
+                                            <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
+                                            <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
+                                        </select>
+                                        <select className={styles.dropdown} name="repeatUnit" disabled={loading} onChange={handleChange}>
+                                            <option value="">Repeat Unit*</option>
+                                            <option value={RepeatUnit.DAY}>DAY</option>
+                                            <option value={RepeatUnit.WEEK}>WEEK</option>
+                                            <option value={RepeatUnit.MONTH}>MONTH</option>
+                                            <option value={RepeatUnit.YEAR}>YEAR</option>
+                                        </select>
+                                        <input className={styles.amount} type="text" name="repeatInterval" placeholder="Interval" value={transactionRequest.repeatInterval} onChange={handleChange} disabled={loading} required></input>
+                                        <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                    </div>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
@@ -72,12 +169,12 @@ export default function MyTransactions() {
                                 </tr>
                             </thead>
                             <tbody className={styles.tbody}>
-                            {
+                            {/* {
                                 transactions.map(transaction => (
                                     <tr className={styles.tr} key={transaction.id}>
                                     </tr>
                                 ))
-                            }
+                            } */}
                             </tbody>
                         </table>
                     </div>
