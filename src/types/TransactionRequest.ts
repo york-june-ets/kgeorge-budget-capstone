@@ -7,7 +7,7 @@ export type TransactionRequest = {
     description: string
     allocations: AllocationRequest[]
     amount: string
-    type: TransactionType | null
-    repeatUnit: RepeatUnit | null
+    transactionType: TransactionType | null
+    repeatUnit: RepeatUnit | ""
     repeatInterval: string
 }

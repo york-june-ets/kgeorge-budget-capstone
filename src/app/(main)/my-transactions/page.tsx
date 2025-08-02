@@ -11,6 +11,7 @@ import { AccountContext } from "@/context/AccountContext"
 import { TransactionType } from "@/types/TransactionType"
 import { RepeatUnit } from "@/types/RepeatUnit"
 import { CategoryContext } from "@/context/CategoryContext"
+import { fetchCreateTransaction } from "@/lib/transaction"
 
 export default function MyTransactions() {
     const [error, setError] = useState<String>("")
@@ -21,8 +22,8 @@ export default function MyTransactions() {
         description: "",
         allocations: [],
         amount: "",
-        type: null, 
-        repeatUnit: null, 
+        transactionType: null, 
+        repeatUnit: "", 
         repeatInterval: "" 
     })
     const [refresh, setRefresh] = useState<number>(0)
@@ -41,7 +42,7 @@ export default function MyTransactions() {
             const regex = /^\d*$/
             if (!regex.test(value)) return 
         }
-        if (name === "type") {
+        if (name === "transactionType") {
             if (value === "WITHDRAWAL") {setWithdrawal(true)}
             else {setWithdrawal(false)}
         }
@@ -57,7 +58,6 @@ export default function MyTransactions() {
             const regex = /^\d*(\.\d{0,2})?$/
             if (!regex.test(value)) return
         }
-
         const updatedAllocations = [...transactionRequest.allocations]
         updatedAllocations[index] = {
             ...updatedAllocations[index],
@@ -94,9 +94,30 @@ export default function MyTransactions() {
         }))
     }
 
-
-
-
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault()
+            setLoading(true)
+            const submitAccountRequest = async () => {
+                try {
+                    if (token) {
+                        const response = await fetchCreateTransaction(token, transactionRequest)
+                        if (response.ok) {
+                            // refresh()
+                        } 
+                        else {
+                            const error = await response.json()
+                            setError(error.message)
+                        }
+                    }
+                } catch (err) {
+                    setError("An unexpected error occured")
+                    console.error(err)
+                } finally {
+                    setLoading(false)
+                }
+            }
+            submitAccountRequest()
+        }
 
     return (
         <div className="background">
@@ -109,7 +130,7 @@ export default function MyTransactions() {
                     {!edit &&
                         <>
                             <h2 className="subtitle">ADD NEW TRANSACTION</h2>
-                            <form className={styles.form}>
+                            <form className={styles.form} onSubmit={handleSubmit}>
                                 {withdrawal && 
                                     <div className={styles.formLeft}>
                                         {transactionRequest.allocations.map((allocation, index) => (
@@ -126,25 +147,25 @@ export default function MyTransactions() {
                                             </div>
                                         ))}
                                         <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
-                                </div>
+                                    </div>
                                 }
                                 <div className={styles.formRight}>
                                     <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
                                     <div className={styles.grid}>
-                                        <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
-                                        <select className={styles.account} name="account" disabled={loadingAccounts || loading} onChange={handleChange}>
+                                        <select className={styles.account} name="accountId" disabled={loadingAccounts || loading} onChange={handleChange}>
                                             <option value="">Account*</option>
                                             {
                                                 accounts.map(account => (
-                                                    <option key={account.id} value={account.name}>{account.name}</option>
+                                                    <option key={account.id} value={account.id}>{account.name}</option>
                                                 ))
                                             }
                                         </select>
-                                        <select className={styles.dropdown} name="type" disabled={loading} onChange={handleChange}>
+                                        <select className={styles.dropdown} name="transactionType" disabled={loading} onChange={handleChange}>
                                             <option value="">Transaction Type*</option>
                                             <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
                                             <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
                                         </select>
+                                        <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
                                         <select className={styles.dropdown} name="repeatUnit" disabled={loading} onChange={handleChange}>
                                             <option value="">Repeat Unit*</option>
                                             <option value={RepeatUnit.DAY}>DAY</option>
@@ -152,12 +173,12 @@ export default function MyTransactions() {
                                             <option value={RepeatUnit.MONTH}>MONTH</option>
                                             <option value={RepeatUnit.YEAR}>YEAR</option>
                                         </select>
-                                        <input className={styles.amount} type="text" name="repeatInterval" placeholder="Interval" value={transactionRequest.repeatInterval} onChange={handleChange} disabled={loading} required></input>
+                                        <input className={styles.amount} type="text" name="repeatInterval" placeholder="Interval" value={transactionRequest.repeatInterval} onChange={handleChange} disabled={loading}></input>
                                         <button className={styles.submit} type="submit" disabled={loading}>Create</button>
                                     </div>
                                 </div>
-                                {error && <p>{error}</p>}
                             </form>
+                            {error && <p>{error}</p>}
                         </>
                     }
                     <h2 className="subtitle">VIEW TRANSACTIONS</h2>
