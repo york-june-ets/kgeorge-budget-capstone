@@ -3,6 +3,7 @@ import { RepeatUnit } from "./RepeatUnit"
 import { TransactionType } from "./TransactionType"
 
 export type TransactionRequest = {
+    date: string
     accountId: number | null
     description: string
     allocations: AllocationRequest[]

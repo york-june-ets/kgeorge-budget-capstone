@@ -5,6 +5,7 @@ import { Account } from "./Account"
 
 export type Transaction = {
     id: number
+    date: string
     account: Account
     description: string
     amount: string

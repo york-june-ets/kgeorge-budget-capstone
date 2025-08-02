@@ -19,6 +19,7 @@ export default function MyTransactions() {
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [transactionRequest, setTransactionRequest] = useState<TransactionRequest>({
+        date: "",
         accountId: null,
         description: "",
         allocations: [],
@@ -128,6 +129,7 @@ export default function MyTransactions() {
     function openEdit(transaction: Transaction) {
         setEdit(true)
         setTransactionRequest({
+            date: "",
             accountId: null,
             description: "",
             allocations: [],
@@ -170,7 +172,10 @@ export default function MyTransactions() {
                                     </div>
                                 }
                                 <div className={styles.formRight}>
-                                    <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
+                                    <div className={styles.row}>
+                                        <input className={styles.date} type="date" name="date" value={transactionRequest.date} onChange={handleChange} disabled={loading} required></input>
+                                        <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
+                                    </div>
                                     <div className={styles.grid}>
                                         <select className={styles.account} name="accountId" disabled={loadingAccounts || loading} onChange={handleChange}>
                                             <option value="">Account*</option>
@@ -206,6 +211,7 @@ export default function MyTransactions() {
                         <table className={styles.table}>
                             <thead className={styles.thead}>
                                 <tr className={styles.tr}>
+                                    <th className={styles.th}>Date</th>
                                     <th className={styles.th}>Description</th>
                                     <th className={styles.th}>Account</th>
                                     <th className={styles.th}>Amount</th>
@@ -216,6 +222,7 @@ export default function MyTransactions() {
                             {
                                 transactions.map(transaction => (
                                     <tr className={styles.tr} key={transaction.id}>
+                                        <td className={styles.td}>{transaction.date}</td>
                                         <td className={styles.td}>{transaction.description}</td>
                                         <td className={styles.td}>{transaction.account.name}</td>
                                         <td className={styles.td}>{getSymbol(transaction.transactionType)} ${transaction.amount}</td>
