@@ -195,7 +195,7 @@ export default function MyBudgets() {
                             </tbody>
                         </table>
                         {loadingBudgets && <p>Loading Budgets, please wait...</p>}
-                        {budgetError && <p>{budgetError}</p>}
+                            {budgetError && <p>{budgetError}</p>}
                     </div>
                 </div>
             </div>

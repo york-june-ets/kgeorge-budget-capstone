@@ -1,5 +1,5 @@
 export type Allocation = {
-    allocationId: number
+    id: number
     category: string
     amount: string
 }

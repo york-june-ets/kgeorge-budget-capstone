@@ -83,6 +83,7 @@
 
 .table {
     border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
 .table, .thead {
@@ -93,6 +94,15 @@
     width: 90%;
     display: grid;
     grid-template-columns: 0.8fr 1fr 1fr 0.8fr 0.8fr 0.1fr;
+    text-align: left;
+    margin: auto;
+    font-size: 14px;
+}
+
+.tr2 {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.1fr;
     text-align: left;
     margin: auto;
     font-size: 14px;
@@ -115,5 +125,14 @@
     min-width: 0;
 }
 
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.submit {
+    width: 100%;
+}
 
 
