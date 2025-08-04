@@ -4,6 +4,7 @@ import { Transaction } from "@/types/Transaction"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import { AuthContext } from "./AuthContext"
 import { fetchCustomerTransactions } from "@/lib/transaction"
+import { AccountContext } from "./AccountContext"
 
 interface TransactionContextValue {
     transactions: Transaction[]
@@ -25,6 +26,7 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
     const {token} = useContext(AuthContext)
     const [transactionError, setTransactionError] = useState<string>("")
     const [refreshVal, setRefreshVal] = useState<number>(0)
+    const accountContext = useContext(AccountContext)
 
     useEffect(() => {
         setLoadingTransactions(true)
@@ -48,6 +50,7 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
             }
         }
         getCustomerTransactions()
+        accountContext.refresh()
     }, [refreshVal, token])
 
     const refresh = () => {
