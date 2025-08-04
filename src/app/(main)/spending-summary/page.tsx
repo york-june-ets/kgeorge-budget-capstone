@@ -28,7 +28,7 @@ export default function SpendingSummary() {
                             <thead className={styles.thead}>
                                 <tr className={styles.tr}>
                                     <th className={styles.th}>Category</th>
-                                    <th className={styles.th}>Spent</th>
+                                    <th className={styles.th}>Total Spent</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.tbody}>
@@ -37,7 +37,7 @@ export default function SpendingSummary() {
                                     .slice(0,5).map(category => (
                                         <tr className={styles.tr} key={category.id}>
                                             <td className={styles.td}>{category.name}</td>
-                                            <td className={styles.td}>{getCategorySpending(category.name, transactions).toFixed(2)}</td>
+                                            <td className={styles.td}>${getCategorySpending(category.name, transactions).toFixed(2)}</td>
                                         </tr>
                                     ))
                                 }
