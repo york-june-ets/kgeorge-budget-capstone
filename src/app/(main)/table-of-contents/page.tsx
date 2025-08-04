@@ -69,7 +69,10 @@ export default function TableOfContents() {
                         </div>
                 </div>
             </div>
-            <button className="logout" onClick={logout}>logout</button>
+            <div className="buttons">
+                <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
+                <button className="topButton" onClick={logout}>Logout</button>
+            </div>
         </div>
     )
 }

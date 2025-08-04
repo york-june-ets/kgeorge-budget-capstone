@@ -91,36 +91,25 @@
     background-position: fixed;
 }
 
-.toc {
-    background-color: #0776d7;
-    color: white;
-    width: 200px;
-    height: 40px;
-    border: 1px solid white;
-    border-radius: 10px;
-    font-size: 18px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    display: block;
-    position: fixed;
-    right: 0;
-    top:0;
-    margin: 20px 150px 0 0;
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  margin: 20px 20px;
 }
 
-.logout {
+.topButton {
     background-color: #0776d7;
     color: white;
-    width: 100px;
-    height: 40px;
     border: 1px solid white;
     border-radius: 10px;
     font-size: 18px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    display: block;
-    position: fixed;
-    right: 0;
-    top:0;
-    margin: 20px;
+    padding: 10px 15px;
+    
 }
 
 .page-header {

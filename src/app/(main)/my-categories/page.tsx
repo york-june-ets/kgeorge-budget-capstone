@@ -154,8 +154,11 @@ export default function MyCategories() {
                     </div>
                 </div>
             </div>
-            <button className="toc" onClick={() => router.push('/table-of-contents')}>Table of Contents</button>
-            <button className="logout" onClick={logout}>Logout</button>
+            <div className="buttons">
+                <button className="topButton" onClick={() => router.push('/table-of-contents')}>Table of Contents</button>
+                <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
+                <button className="topButton" onClick={logout}>Logout</button>
+            </div>
         </div>
     )
 }
