@@ -35,7 +35,7 @@ export const fetchUpdateTransaction = async (token: string, request: Transaction
     return response
 }
 
-export const fetchArchiveTransaction = async (token: string, request: TransactionRequest, transactionId: number) =>  {
+export const fetchArchiveTransaction = async (token: string, transactionId: number) =>  {
     const url = `http://localhost:8080/api/transactions/${transactionId}`
     const response = await fetch(url, {
         method: "DELETE",

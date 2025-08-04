@@ -40,6 +40,9 @@ export default function MyTransactions() {
     const [allocations, setAllocations] = useState<Allocation[] | null>(null)
     const [loadingAllocations, setLoadingAllocations] = useState<boolean>(false)
     const [allocationError, setAllocationError] = useState<string | null>(null)
+    const [selectedAccount, setSelectedAccount] = useState<number | "">("")
+    const [selectedUnit, setSelectedUnit] = useState<string>("")
+    const [selectedType, setSelectedType] = useState<string>("")
 
     useEffect(() => {
             setLoadingAllocations(true)
@@ -49,7 +52,6 @@ export default function MyTransactions() {
                         const response = await fetchTransactionAllocations(token, transaction.id)
                         if (response.ok) {
                             const data = await response.json()
-                            console.log(data)
                             setAllocations(data)
                         } else {
                             const error = await response.json()
@@ -76,8 +78,15 @@ export default function MyTransactions() {
             if (!regex.test(value)) return 
         }
         if (name === "transactionType") {
+            setSelectedType(value)
             if (value === "WITHDRAWAL") {setWithdrawal(true)}
             else {setWithdrawal(false)}
+        }
+        if (name === "repeatUnit"){
+            setSelectedUnit(value)
+        }
+        if (name === "accountId") {
+            setSelectedAccount(value)
         }
         setTransactionRequest(prev => ({
             ...prev,
@@ -207,16 +216,20 @@ export default function MyTransactions() {
     function openEdit(transaction: Transaction) {
         setEdit(true)
         setTransactionRequest({
-            date: "",
-            accountId: null,
-            description: "",
+            date: transaction.date,
+            accountId: transaction.account.id,
+            description: transaction.description,
             allocations: [],
-            amount: "",
-            transactionType: null, 
-            repeatUnit: "", 
-            repeatInterval: "" 
+            amount: transaction.amount,
+            transactionType: transaction.transactionType, 
+            repeatUnit: transaction.repeatUnit, 
+            repeatInterval: transaction.repeatInterval 
         })
         setTransaction(transaction)
+        setSelectedAccount(transaction.account.id)
+        setSelectedType(transaction.transactionType)
+        setSelectedUnit(transaction.repeatUnit)
+        if (transaction.transactionType === "WITHDRAWAL") {setWithdrawal(true)}
     }
 
     function submitHandler(event: React.FormEvent<HTMLFormElement>) {
@@ -232,7 +245,12 @@ export default function MyTransactions() {
                     <div className="page-header">
                         <h1 className={styles.title}>Transaction Management</h1>
                     </div>
+                    {edit &&
+                        <h2 className="subtitle">EDIT TRANSACTION</h2>
+                    }
+                    {!edit &&
                         <h2 className="subtitle">ADD NEW TRANSACTION</h2>
+                    }
                         <form className={styles.form} onSubmit={(event) => submitHandler(event)}>
                             {withdrawal && 
                                 <div className={styles.formLeft}>
@@ -258,7 +276,7 @@ export default function MyTransactions() {
                                     <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
                                 </div>
                                 <div className={styles.grid}>
-                                    <select className={styles.account} name="accountId" disabled={loadingAccounts || loading} onChange={handleChange}>
+                                    <select className={styles.account} name="accountId" value={selectedAccount} disabled={loadingAccounts || loading} onChange={handleChange}>
                                         <option value="">Account*</option>
                                         {
                                             accounts.map(account => (
@@ -266,13 +284,13 @@ export default function MyTransactions() {
                                             ))
                                         }
                                     </select>
-                                    <select className={styles.dropdown} name="transactionType" disabled={loading} onChange={handleChange}>
+                                    <select className={styles.dropdown} name="transactionType" value={selectedType} disabled={loading} onChange={handleChange}>
                                         <option value="">Transaction Type*</option>
                                         <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
                                         <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
                                     </select>
                                     <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
-                                    <select className={styles.dropdown} name="repeatUnit" disabled={loading} onChange={handleChange}>
+                                    <select className={styles.dropdown} name="repeatUnit" value={selectedUnit} disabled={loading} onChange={handleChange}>
                                         <option value="">Repeat Unit*</option>
                                         <option value={RepeatUnit.DAY}>DAY</option>
                                         <option value={RepeatUnit.WEEK}>WEEK</option>
