@@ -1,4 +1,6 @@
+import { Category } from "@/types/Category"
 import { CategoryRequest } from "@/types/CategoryRequest"
+import { Transaction } from "@/types/Transaction"
 
 export const fetchCreateCategory = async (token: string, request: CategoryRequest) => {
     const url = `http://localhost:8080/api/categories`
@@ -45,3 +47,17 @@ export const fetchArchiveCategory = async (token: string, categoryId: number) =>
     })
     return response
 }
+
+export const getCategorySpending = (category: string, transactions: Transaction[]) => {
+    let spending = 0;
+    transactions.forEach(transaction => {
+        const allocations = transaction.allocations
+        allocations.forEach(allocation => {
+            if (allocation.category === category) {
+                spending += +allocation.amount
+            }
+        })
+    })
+    return spending
+}
+
