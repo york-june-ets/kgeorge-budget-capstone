@@ -34,7 +34,6 @@ export const AccountProvider: React.FC<{children: ReactNode}> = ({children}) => 
                     const response = await fetchCustomerAccounts(token)
                     if (response.ok) {
                         const data = await response.json()
-                        console.log(data)
                         setAccounts(data)
                     } else {
                         const error = await response.json()

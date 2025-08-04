@@ -34,7 +34,6 @@ export const CategoryProvider: React.FC<{children: ReactNode}> = ({children}) =>
                     const response = await fetchCustomerCategories(token)
                     if (response.ok) {
                         const data = await response.json()
-                        console.log(data)
                         setCategories(data)
                     } else {
                         const error = await response.json()

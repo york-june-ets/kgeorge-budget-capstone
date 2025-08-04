@@ -34,7 +34,6 @@ export const BudgetProvider: React.FC<{children: ReactNode}> = ({children}) => {
                     const response = await fetchCustomerBudgets(token)
                     if (response.ok) {
                         const data = await response.json()
-                        console.log(data)
                         setBudgets(data)
                     } else {
                         const error = await response.json()

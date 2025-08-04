@@ -37,37 +37,11 @@ export default function MyTransactions() {
     const {accounts, loadingAccounts} = useContext(AccountContext)
     const {categories, loadingCategories} = useContext(CategoryContext)
     const {transactions, loadingTransactions, refresh, transactionError} = useContext(TransactionContext)
-    const [allocations, setAllocations] = useState<Allocation[] | null>(null)
     const [loadingAllocations, setLoadingAllocations] = useState<boolean>(false)
     const [allocationError, setAllocationError] = useState<string | null>(null)
-    const [selectedAccount, setSelectedAccount] = useState<number | "">("")
+    const [selectedAccount, setSelectedAccount] = useState<string | "">("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
     const [selectedType, setSelectedType] = useState<string>("")
-
-    useEffect(() => {
-            setLoadingAllocations(true)
-            const getCustomerBudgets = async () => {
-                try {
-                    if (token && transaction) {
-                        const response = await fetchTransactionAllocations(token, transaction.id)
-                        if (response.ok) {
-                            const data = await response.json()
-                            setAllocations(data)
-                        } else {
-                            const error = await response.json()
-                            setAllocationError(error.message)
-                        }
-                    }
-                } catch (err) {
-                    setAllocationError("An unexpected error occurred")
-                    console.error(err)
-                } finally {
-                    setLoadingAllocations(false)
-                }
-            }
-            getCustomerBudgets()
-    }, [transaction, token])
-    
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -86,8 +60,10 @@ export default function MyTransactions() {
             setSelectedUnit(value)
         }
         if (name === "accountId") {
+            console.log(value)
             setSelectedAccount(value)
         }
+        console.log(value)
         setTransactionRequest(prev => ({
             ...prev,
             [name]: value
@@ -195,6 +171,7 @@ export default function MyTransactions() {
         }
         submitEditTransactionRequest()
         setEdit(false)
+        setWithdrawal(false)
         setTransaction(null)
         setTransactionRequest({
             date: "",
@@ -219,14 +196,14 @@ export default function MyTransactions() {
             date: transaction.date,
             accountId: transaction.account.id,
             description: transaction.description,
-            allocations: [],
+            allocations: transaction.allocations,
             amount: transaction.amount,
             transactionType: transaction.transactionType, 
             repeatUnit: transaction.repeatUnit, 
             repeatInterval: transaction.repeatInterval 
         })
         setTransaction(transaction)
-        setSelectedAccount(transaction.account.id)
+        setSelectedAccount(transaction.account.id.toString())
         setSelectedType(transaction.transactionType)
         setSelectedUnit(transaction.repeatUnit)
         if (transaction.transactionType === "WITHDRAWAL") {setWithdrawal(true)}
@@ -252,23 +229,23 @@ export default function MyTransactions() {
                         <h2 className="subtitle">ADD NEW TRANSACTION</h2>
                     }
                         <form className={styles.form} onSubmit={(event) => submitHandler(event)}>
-                            {withdrawal && 
+                            {withdrawal &&
                                 <div className={styles.formLeft}>
-                                    {transactionRequest.allocations.map((allocation, index) => (
-                                        <div key={index} className={styles.allocationRow}>
-                                            <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)}disabled={loadingCategories || loading}>
-                                                <option value="">Category*</option>
-                                                {
-                                                    categories.map((category) => (
-                                                        <option key={category.id} value={category.name}>{category.name}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                            <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)}disabled={loading} required/>
-                                        </div>
-                                    ))}
-                                    <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
-                                </div>
+                                {transactionRequest.allocations.map((allocation, index) => (
+                                    <div key={index} className={styles.allocationRow}>
+                                        <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)}disabled={loadingCategories || loading}>
+                                            <option value="">Category*</option>
+                                            {
+                                                categories.map((category) => (
+                                                    <option key={category.id} value={category.name}>{category.name}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)}disabled={loading} required/>
+                                    </div>
+                                ))}
+                                <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
+                            </div>
                             }
                             <div className={styles.formRight}>
                                 <div className={styles.row}>
@@ -311,7 +288,12 @@ export default function MyTransactions() {
                             </div>
                         </form>
                         {error && <p>{error}</p>}
-                    <h2 className="subtitle">VIEW TRANSACTIONS</h2>
+                        {edit &&
+                            <h2 className="subtitle">VIEW TRANSACTION DETAIL</h2>
+                        }
+                        {!edit &&
+                            <h2 className="subtitle">VIEW TRANSACTIONS</h2>
+                        }
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead className={styles.thead}>
@@ -347,7 +329,7 @@ export default function MyTransactions() {
                             }
                             </tbody>
                         </table>
-                        {edit && transaction && allocations && transaction.transactionType === "WITHDRAWAL" && 
+                        {edit && transaction && transaction.transactionType === "WITHDRAWAL" && 
                             <table className={styles.table}>
                                 <thead className={styles.thead}>
                                     <tr className={styles.tr2}>
@@ -357,7 +339,7 @@ export default function MyTransactions() {
                                 </thead>
                                 <tbody className={styles.tbody}>
                                     {
-                                        allocations.map((allocation: Allocation) => (
+                                        transaction.allocations.map((allocation: Allocation) => (
                                             <tr className={styles.tr2} key={allocation.id}>
                                                 <td className={styles.td}>{allocation.category}</td>
                                                 <td className={styles.td}>{allocation.amount}</td>

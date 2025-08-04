@@ -34,7 +34,6 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
                     const response = await fetchCustomerTransactions(token)
                     if (response.ok) {
                         const data = await response.json()
-                        console.log(data)
                         setTransactions(data)
                     } else {
                         const error = await response.json()

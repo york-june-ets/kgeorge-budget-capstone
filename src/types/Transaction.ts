@@ -2,6 +2,7 @@ import { RepeatUnit } from "./RepeatUnit"
 import { TransactionType } from "./TransactionType"
 import { AllocationRequest } from "./AllocationRequest"
 import { Account } from "./Account"
+import { Allocation } from "./Allocation"
 
 export type Transaction = {
     id: number
@@ -12,4 +13,5 @@ export type Transaction = {
     transactionType: TransactionType
     repeatUnit: RepeatUnit
     repeatInterval: string
+    allocations: Allocation[]
 }
