@@ -10,6 +10,13 @@
 .tableWrapper {
     width: 100%;
     overflow-y:scroll;
+    height: 175px;
+}
+
+.tableWrapper2 {
+    width: 100%;
+    overflow-y:scroll;
+    height: 117px;
 }
 
 .table {

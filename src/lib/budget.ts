@@ -1,4 +1,7 @@
+import { Budget } from "@/types/Budget"
 import { BudgetRequest } from "@/types/BudgetRequest"
+import { Transaction } from "@/types/Transaction"
+import { getCategorySpending } from "./category"
 
 export const fetchCreateBudget = async (token: string, request: BudgetRequest) =>  {
     const url = `http://localhost:8080/api/budgets`
@@ -44,4 +47,21 @@ export const fetchArchiveBudget = async (token: string, budgetId: number) =>  {
         }
     })
     return response
+}
+
+const getQuarter = (month: number) => Math.floor(month / 3) + 1
+
+export const getBudgetSpending = (budget: Budget, transactions: Transaction[]) => {
+    const filteredTransactions = transactions.filter(transaction => {
+        const date = new Date(transaction.date)
+        const today = new Date()
+        if (budget.timePeriod === "MONTH") {
+            return date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()
+        }else if (budget.timePeriod === "QUARTER") {
+            return date.getFullYear() === today.getFullYear() && getQuarter(date.getMonth()) === getQuarter(today.getMonth())
+        } else {
+            return date.getFullYear() === today.getFullYear()
+        }
+    })
+    return getCategorySpending(budget.category, filteredTransactions)
 }

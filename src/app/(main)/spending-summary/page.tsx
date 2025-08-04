@@ -7,12 +7,16 @@ import { getCategorySpending } from "@/lib/category"
 import { useRouter } from "next/navigation"
 import { useContext } from "react"
 import styles from "@/styles/spending-summary.module.css"
+import { BudgetContext } from "@/context/BudgetContext"
+import { getBudgetSpending } from "@/lib/budget"
 
 export default function SpendingSummary() {
     const router = useRouter()
     const {logout} = useContext(AuthContext)
     const {categories} = useContext(CategoryContext)
     const {transactions} = useContext(TransactionContext)
+    const {budgets} = useContext(BudgetContext)
+
     return (
         <div className="background">
             <div className="book">
@@ -38,6 +42,27 @@ export default function SpendingSummary() {
                                         <tr className={styles.tr} key={category.id}>
                                             <td className={styles.td}>{category.name}</td>
                                             <td className={styles.td}>${getCategorySpending(category.name, transactions).toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
+                    <div className={styles.tableWrapper2}>
+                        <table className={styles.table}>
+                            <thead className={styles.thead}>
+                                <tr className={styles.tr}>
+                                    <th className={styles.th}>Category</th>
+                                    <th className={styles.th}>Current Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className={styles.tbody}>
+                                {
+                                    budgets.map(budget => (
+                                        <tr className={styles.tr} key={budget.id}>
+                                            <td className={styles.td}>{budget.category}</td>
+                                            <td className={styles.td}>${getBudgetSpending(budget, transactions)} / {budget.timePeriod}</td>
                                         </tr>
                                     ))
                                 }
