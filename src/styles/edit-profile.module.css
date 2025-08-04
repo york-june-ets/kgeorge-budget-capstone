@@ -1,0 +1,24 @@
+.title {
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 300;
+    font-size: 35px;
+    margin: 10px 0 0 50px;
+    width: 100px;
+}
+
+.form {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    gap: 15px;
+}
+
+.form input {
+    background-color: #edf8ff;
+    border: 1px solid black;
+    margin: 5px 0;
+    padding: 10px 10px;
+    min-width: 0;
+}
