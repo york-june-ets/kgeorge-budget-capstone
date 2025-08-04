@@ -135,6 +135,7 @@ export default function MyTransactions() {
             }
         }
         submitTransactionRequest()
+        resetForm()
     }
 
     function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -170,6 +171,10 @@ export default function MyTransactions() {
             }
         }
         submitEditTransactionRequest()
+        resetForm()
+    }
+
+    function resetForm() {
         setEdit(false)
         setWithdrawal(false)
         setTransaction(null)
@@ -183,6 +188,9 @@ export default function MyTransactions() {
             repeatUnit: "", 
             repeatInterval: "" 
         })
+        setSelectedAccount("")
+        setSelectedType("")
+        setSelectedUnit("")
     }
 
     function getSymbol(transactionType: "DEPOSIT" | "WITHDRAWAL"): String {
