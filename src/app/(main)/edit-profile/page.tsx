@@ -6,10 +6,11 @@ import { useContext, useEffect, useRef, useState } from "react"
 import styles from "@/styles/edit-profile.module.css"
 import { SignupRequest } from "@/types/SignupRequest"
 import { fetchUpdateCustomer } from "@/lib/customer"
+import { fetchStartSession } from "@/lib/auth"
 
 export default function EditProfile() {
     const router = useRouter()
-    const {currentCustomer, logout} = useContext(AuthContext)
+    const {currentCustomer, token, logout, updateSession} = useContext(AuthContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>("")
     const confirmPassword = useRef<HTMLInputElement>(null)
@@ -41,13 +42,36 @@ export default function EditProfile() {
         setLoading(true)
         const submitUpdateProfileRequest = async () => {
             try {
-                const response = await fetchUpdateCustomer(updateProfileRequest)
-                if (response.ok) {
-                    setError("Profile updated successfully")
-                } 
-                else {
-                    const error = await response.json()
-                    setError(error.message)
+                if (token) {
+                    const response = await fetchUpdateCustomer(token, updateProfileRequest)
+                    if (response.ok) {
+                        setError("Profile updated successfully")
+                    } 
+                    else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+            await createNewSession()
+        }
+        const createNewSession = async () => {
+            setLoading(true)
+            try {
+                if (token && currentCustomer) {
+                    const response = await fetchStartSession(token)
+                    if (response.ok) {
+                        const authData = await response.json()
+                        updateSession(authData.token, authData.customer)
+                    } else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
                 }
             } catch (err) {
                 setError("An unexpected error occured")
@@ -77,8 +101,8 @@ export default function EditProfile() {
                     <input type="text" name="firstName" placeholder="First Name*" value={updateProfileRequest.firstName} onChange={handleChange} disabled={loading} required></input>
                     <input type="text" name="lastName" placeholder="Last Name*" value={updateProfileRequest.lastName} onChange={handleChange} disabled={loading} required></input>
                     <input type="email" name="email" placeholder="Email*" value={updateProfileRequest.email} onChange={handleChange} disabled={loading} required></input>
-                    <input type="password" name="password" placeholder="Password*" value={updateProfileRequest.password} onChange={handleChange} disabled={loading} minLength={8} required></input>
-                    <input type="password" placeholder="Confirm Password*" ref={confirmPassword} onChange={handleChange} disabled={loading} required></input>
+                    <input type="password" name="password" placeholder="Password*" value={updateProfileRequest.password} onChange={handleChange} disabled={loading} minLength={8}></input>
+                    <input type="password" placeholder="Confirm Password*" ref={confirmPassword} onChange={handleChange} disabled={loading}></input>
                     <input type="tel" name="phoneNumber" placeholder="Phone Number" value={updateProfileRequest.phoneNumber} onChange={handleChange} disabled={loading}></input>
                     <button className="buttonPrimary" type="submit" disabled={loading}>Save</button>
                     {error && <p>{error}</p>}

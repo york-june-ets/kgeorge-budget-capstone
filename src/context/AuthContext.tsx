@@ -9,6 +9,7 @@ interface AuthContextValue {
     token: string | null
     login: (userToken: string | null, customerInfo: Customer | null) => void
     logout: () => void
+    updateSession: (userToken: string | null, customerInfo: Customer | null) => void
     loading: boolean
 }
 
@@ -17,6 +18,7 @@ export const AuthContext = createContext<AuthContextValue>({
     token: null,
     login: () => {},
     logout: () => {},
+    updateSession: () => {},
     loading: false
 })
 
@@ -44,6 +46,16 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         return () => clearTimeout(timeout)
     }, [token])
 
+    const updateSession = (customerToken: string | null, customerInfo: Customer| null) => {
+        if (customerToken && customerInfo) {
+            setToken(customerToken)
+            setCurrentCustomer(customerInfo)
+            window.localStorage.setItem('authToken', customerToken)
+            window.localStorage.setItem('currentCustomer', JSON.stringify(customerInfo))
+            window.location.href="/edit-profile"
+        }
+    }
+
     const login = (customerToken: string | null, customerInfo: Customer | null) => {
         if (customerToken && customerInfo) {
             setToken(customerToken)
@@ -54,17 +66,17 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         }
     }
 
-  const logout = () => {
-    if (token) {fetchEndSession(token)}
-    window.localStorage.removeItem('authToken')
-    window.localStorage.removeItem('currentCustomer')
-    setToken(null)
-    setCurrentCustomer(null)
-    window.location.href="/login"
-  }
+    const logout = () => {
+        if (token) {fetchEndSession(token)}
+        window.localStorage.removeItem('authToken')
+        window.localStorage.removeItem('currentCustomer')
+        setToken(null)
+        setCurrentCustomer(null)
+        window.location.href="/login"
+    }
 
     return (
-        <AuthContext.Provider value={{currentCustomer, token, login, logout, loading}}>
+        <AuthContext.Provider value={{currentCustomer, token, login, logout, updateSession, loading}}>
             {children}
         </AuthContext.Provider>
     )

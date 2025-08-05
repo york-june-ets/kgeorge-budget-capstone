@@ -10,11 +10,14 @@ export const fetchCreateCustomer = async (request: SignupRequest) => {
     return response
 }
 
-export const fetchUpdateCustomer = async (request: SignupRequest) => {
+export const fetchUpdateCustomer = async (token: string, request: SignupRequest) => {
     const url = `http://localhost:8080/api/customers`
     const response = await fetch(url, {
         method: "PUT",
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(request)
     })
     return response

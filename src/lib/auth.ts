@@ -17,3 +17,12 @@ export const fetchEndSession = async (token: string) => {
         headers: {'Authorization': `Bearer ${token}`}
     })
 }
+
+export const fetchStartSession = async (token: string) => {
+    const url = `http://localhost:8080/api/auth`
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {'Authorization': `Bearer ${token}`}
+    })
+    return response
+}
