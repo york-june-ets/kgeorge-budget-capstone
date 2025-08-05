@@ -98,9 +98,9 @@ export default function EditProfile() {
                     </div>   
                 {loading && <p>Loading, please wait...</p>}
                 <form className={styles.form} onSubmit={handleSubmit}>
-                    <input type="text" name="firstName" placeholder="First Name*" value={updateProfileRequest.firstName} onChange={handleChange} disabled={loading} required></input>
-                    <input type="text" name="lastName" placeholder="Last Name*" value={updateProfileRequest.lastName} onChange={handleChange} disabled={loading} required></input>
-                    <input type="email" name="email" placeholder="Email*" value={updateProfileRequest.email} onChange={handleChange} disabled={loading} required></input>
+                    <input type="text" name="firstName" placeholder="First Name" value={updateProfileRequest.firstName} onChange={handleChange} disabled={loading} required></input>
+                    <input type="text" name="lastName" placeholder="Last Name" value={updateProfileRequest.lastName} onChange={handleChange} disabled={loading} required></input>
+                    <input type="email" name="email" placeholder="Email" value={updateProfileRequest.email} onChange={handleChange} disabled={loading} required></input>
                     <input type="password" name="password" placeholder="Password" value={updateProfileRequest.password} onChange={handleChange} disabled={loading} minLength={8}></input>
                     <input type="password" placeholder="Confirm Password" ref={confirmPassword} onChange={handleChange} disabled={loading}></input>
                     <input type="tel" name="phoneNumber" placeholder="Phone Number" value={updateProfileRequest.phoneNumber} onChange={handleChange} disabled={loading}></input>
