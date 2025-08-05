@@ -225,78 +225,8 @@ export default function MyTransactions() {
     return (
         <div className="background">
             <div className="book">
-                <div className="page-left"></div>
-                <div className="page-right">
-                    <div className="page-header">
-                        <h1 className={styles.title}>Transaction Management</h1>
-                    </div>
+                <div className="page-left">
                     {edit &&
-                        <h2 className="subtitle">EDIT TRANSACTION</h2>
-                    }
-                    {!edit &&
-                        <h2 className="subtitle">ADD NEW TRANSACTION</h2>
-                    }
-                        <form className={styles.form} onSubmit={(event) => submitHandler(event)}>
-                            {withdrawal &&
-                                <div className={styles.formLeft}>
-                                {transactionRequest.allocations.map((allocation, index) => (
-                                    <div key={index} className={styles.allocationRow}>
-                                        <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)}disabled={loadingCategories || loading}>
-                                            <option value="">Category*</option>
-                                            {
-                                                categories.map((category) => (
-                                                    <option key={category.id} value={category.name}>{category.name}</option>
-                                                ))
-                                            }
-                                        </select>
-                                        <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)}disabled={loading} required/>
-                                    </div>
-                                ))}
-                                <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
-                            </div>
-                            }
-                            <div className={styles.formRight}>
-                                <div className={styles.row}>
-                                    <input className={styles.date} type="date" name="date" value={transactionRequest.date} onChange={handleChange} disabled={loading} required></input>
-                                    <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
-                                </div>
-                                <div className={styles.grid}>
-                                    <select className={styles.account} name="accountId" value={selectedAccount} disabled={loadingAccounts || loading} onChange={handleChange}>
-                                        <option value="">Account*</option>
-                                        {
-                                            accounts.map(account => (
-                                                <option key={account.id} value={account.id}>{account.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                    <select className={styles.dropdown} name="transactionType" value={selectedType} disabled={loading} onChange={handleChange}>
-                                        <option value="">Transaction Type*</option>
-                                        <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
-                                        <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
-                                    </select>
-                                    <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
-                                    <select className={styles.dropdown} name="repeatUnit" value={selectedUnit} disabled={loading} onChange={handleChange}>
-                                        <option value="">Repeat Unit*</option>
-                                        <option value={RepeatUnit.DAY}>DAY</option>
-                                        <option value={RepeatUnit.WEEK}>WEEK</option>
-                                        <option value={RepeatUnit.MONTH}>MONTH</option>
-                                        <option value={RepeatUnit.YEAR}>YEAR</option>
-                                    </select>
-                                    <input className={styles.amount} type="text" name="repeatInterval" placeholder="Interval" value={transactionRequest.repeatInterval} onChange={handleChange} disabled={loading}></input>
-                                    {edit &&
-                                        <div className={styles.buttons}>
-                                            <button className={styles.submit} type="submit" name="action" value="save" disabled={loading}>Save</button>
-                                            <button className={styles.submit} type="submit" name="action" value="delete" disabled={loading}>Delete</button>
-                                        </div>
-                                    }
-                                    {!edit &&
-                                        <button className={styles.submit} type="submit" disabled={loading}>Create</button>
-                                    }
-                                </div>
-                            </div>
-                        </form>
-                        {error && <p>{error}</p>}
-                        {edit &&
                             <h2 className="subtitle">VIEW TRANSACTION DETAIL</h2>
                         }
                         {!edit &&
@@ -363,6 +293,77 @@ export default function MyTransactions() {
                         {loadingTransactions && <p>Loading Trasactions, please wait...</p>}
                         {transactionError && <p>{transactionError}</p>}
                     </div>
+                </div>
+                <div className="page-right">
+                    <div className="page-header">
+                        <h1 className={styles.title}>Transaction Management</h1>
+                    </div>
+                    {edit &&
+                        <h2 className="subtitle">EDIT TRANSACTION</h2>
+                    }
+                    {!edit &&
+                        <h2 className="subtitle">ADD NEW TRANSACTION</h2>
+                    }
+                        <form className={styles.form} onSubmit={(event) => submitHandler(event)}>
+                            <div className={styles.formRight}>
+                                <div className={styles.row}>
+                                    <input className={styles.date} type="date" name="date" value={transactionRequest.date} onChange={handleChange} disabled={loading} required></input>
+                                    <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
+                                </div>
+                                <div className={styles.grid}>
+                                    <select className={styles.account} name="accountId" value={selectedAccount} disabled={loadingAccounts || loading} onChange={handleChange}>
+                                        <option value="">Account*</option>
+                                        {
+                                            accounts.map(account => (
+                                                <option key={account.id} value={account.id}>{account.name}</option>
+                                            ))
+                                        }
+                                    </select>
+                                    <select className={styles.dropdown} name="transactionType" value={selectedType} disabled={loading} onChange={handleChange}>
+                                        <option value="">Transaction Type*</option>
+                                        <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
+                                        <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
+                                    </select>
+                                    <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
+                                    <select className={styles.dropdown} name="repeatUnit" value={selectedUnit} disabled={loading} onChange={handleChange}>
+                                        <option value="">Repeat Unit*</option>
+                                        <option value={RepeatUnit.DAY}>DAY</option>
+                                        <option value={RepeatUnit.WEEK}>WEEK</option>
+                                        <option value={RepeatUnit.MONTH}>MONTH</option>
+                                        <option value={RepeatUnit.YEAR}>YEAR</option>
+                                    </select>
+                                    <input className={styles.amount} type="text" name="repeatInterval" placeholder="Interval" value={transactionRequest.repeatInterval} onChange={handleChange} disabled={loading}></input>
+                                    {edit &&
+                                        <div className={styles.buttons}>
+                                            <button className={styles.submit} type="submit" name="action" value="save" disabled={loading}>Save</button>
+                                            <button className={styles.submit} type="submit" name="action" value="delete" disabled={loading}>Delete</button>
+                                        </div>
+                                    }
+                                    {!edit &&
+                                        <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                    }
+                                </div>
+                            </div>
+                            {withdrawal &&
+                                <div className={styles.allocationWrapper}>
+                                {transactionRequest.allocations.map((allocation, index) => (
+                                    <div key={index} className={styles.allocationRow}>
+                                        <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)}disabled={loadingCategories || loading}>
+                                            <option value="">Category*</option>
+                                            {
+                                                categories.map((category) => (
+                                                    <option key={category.id} value={category.name}>{category.name}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)}disabled={loading} required/>
+                                    </div>
+                                ))}
+                                <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
+                            </div>
+                            }
+                        </form>
+                        {error && <p>{error}</p>}
                 </div>
             </div>
             <div className="buttons">
