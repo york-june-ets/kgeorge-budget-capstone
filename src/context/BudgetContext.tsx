@@ -4,6 +4,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { AuthContext } from "./AuthContext"
 import { Budget } from "@/types/Budget"
 import { fetchCustomerBudgets } from "@/lib/budget"
+import { CategoryContext } from "./CategoryContext"
 
 interface BudgetContextValue {
     budgets: Budget[]
@@ -25,6 +26,7 @@ export const BudgetProvider: React.FC<{children: ReactNode}> = ({children}) => {
     const {token} = useContext(AuthContext)
     const [budgetError, setBudgetError] = useState<string>("")
     const [refreshVal, setRefreshVal] = useState<number>(0)
+    const {categories} = useContext(CategoryContext)
 
     useEffect(() => {
         setloadingBudgets(true)
@@ -48,7 +50,7 @@ export const BudgetProvider: React.FC<{children: ReactNode}> = ({children}) => {
             }
         }
         getCustomerBudgets()
-    }, [refreshVal, token])
+    }, [refreshVal, token, categories])
 
     const refresh = () => {
         setRefreshVal(refreshVal + 1)
