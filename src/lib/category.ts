@@ -1,3 +1,4 @@
+import { AllocationRequest } from "@/types/AllocationRequest"
 import { Category } from "@/types/Category"
 import { CategoryRequest } from "@/types/CategoryRequest"
 import { Transaction } from "@/types/Transaction"
@@ -61,3 +62,13 @@ export const getCategorySpending = (category: string, transactions: Transaction[
     return spending
 }
 
+export const getTopFiveTotal = (transactions: Transaction[], categories: Category[]) => {
+    let total = 0;
+    [...categories].sort((a,b) => 
+        getCategorySpending(b.name, transactions) - getCategorySpending(a.name, transactions))
+        .slice(0,5).map(category => {
+            total += getCategorySpending(category.name, transactions)
+        }
+    )
+    return total
+}
