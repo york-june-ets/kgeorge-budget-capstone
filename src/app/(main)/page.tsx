@@ -49,7 +49,7 @@ export default function BudgetBook() {
                 <img className={styles.city} src="/city.png"></img>
             </div>
             <div className="buttons">
-                <button className="topButton" onClick={logout}>logout</button>
+                <button className="topButton" onClick={logout}>Logout</button>
             </div>
         </div>
     )

@@ -72,8 +72,9 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: flex-start;
-  background-color: white;
-  background-color: #0776d7;
+  background-image: url('/page-background-left.png');
+  background-size: cover;
+  background-position: fixed;
 }
 
 .page-right {
