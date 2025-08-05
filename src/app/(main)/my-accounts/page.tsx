@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation"
 import { useContext, useState } from "react"
 
 export default function MyAccounts() {
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [accountRequest, setAccountRequest] = useState<AccountRequest>({name: "", type: "", balance: "0.00"})

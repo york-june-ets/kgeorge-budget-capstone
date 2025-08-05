@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 
 export default function MyCategories() {
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [categoryRequest, setCategoryRequest] = useState<CategoryRequest>({name: ""})

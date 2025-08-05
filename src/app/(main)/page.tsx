@@ -2,6 +2,7 @@
 
 import { AuthContext } from "@/context/AuthContext"
 import styles from "@/styles/budget-book.module.css"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect } from "react"
 
@@ -44,10 +45,12 @@ export default function BudgetBook() {
                     <div className={styles.dot}></div>
                     <div className={styles.dot}></div>
                 </div>
-                <a className={styles.site_link} href='/'>www.budgetbook.com</a>
+                <Link className={styles.site_link} href='/'>www.budgetbook.com</Link>
                 <img className={styles.city} src="/city.png"></img>
             </div>
-            <button className="logout" onClick={logout}>logout</button>
+            <div className="buttons">
+                <button className="topButton" onClick={logout}>logout</button>
+            </div>
         </div>
     )
 }

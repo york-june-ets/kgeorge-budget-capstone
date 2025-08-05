@@ -17,7 +17,7 @@ import { Allocation } from "@/types/Allocation"
 import { fetchTransactionAllocations } from "@/lib/allocation"
 
 export default function MyTransactions() {
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const {token, logout} = useContext(AuthContext)
     const [transactionRequest, setTransactionRequest] = useState<TransactionRequest>({
@@ -193,7 +193,7 @@ export default function MyTransactions() {
         setSelectedUnit("")
     }
 
-    function getSymbol(transactionType: "DEPOSIT" | "WITHDRAWAL"): String {
+    function getSymbol(transactionType: "DEPOSIT" | "WITHDRAWAL"): string {
         if (transactionType === "DEPOSIT") {return "+"}
         return "-"
     }

@@ -1,10 +1,8 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import styles from "../styles/overlay.module.css"
 
 export function Overlay() {
-    const router = useRouter()
 
     const closeModal = () => {
         // //modal slot doesn't to switch to default unless I do a full reload on the home page

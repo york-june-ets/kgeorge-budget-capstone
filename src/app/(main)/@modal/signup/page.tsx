@@ -4,12 +4,13 @@ import { Overlay } from "@/components/Overlay"
 import { fetchCreateCustomer } from "@/lib/customer"
 import styles from '@/styles/signup.module.css'
 import { SignupRequest } from "@/types/SignupRequest"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 
 export default function SignupModal() {
     const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
     const [signupRequest, setSignupRequest] = useState<SignupRequest>({firstName: "", lastName: "", email: "", password: "", phoneNumber: ""})
     const confirmPassword = useRef<HTMLInputElement>(null)
     const router = useRouter()
@@ -69,7 +70,7 @@ export default function SignupModal() {
                     <button className="buttonPrimary" type="submit" disabled={loading}>Signup</button>
                     {error && <p>{error}</p>}
                 </form>
-                <p>Already have an account? <a href='/login'>Log in.</a></p>
+                <p>Already have an account? <Link href='/login'>Log in.</Link></p>
             </div>
         </> 
     )

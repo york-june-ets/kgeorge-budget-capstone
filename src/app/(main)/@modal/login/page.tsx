@@ -6,9 +6,10 @@ import { Overlay } from "@/components/Overlay"
 import { LoginRequest } from "@/types/LoginRequest"
 import { AuthContext } from "@/context/AuthContext"
 import { fetchAuthenticateCustomer } from "@/lib/auth"
+import Link from "next/link"
 
 export default function LoginModal() {
-    const [error, setError] = useState<String>("")
+    const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const [loginRequest, setLoginRequest] = useState<LoginRequest>({email: "", password: ""})
     const {login} = useContext(AuthContext)
@@ -61,7 +62,7 @@ export default function LoginModal() {
                     <button className="buttonPrimary" type="submit" disabled={loading}>Login</button>
                     {error && <p>{error}</p>}
                 </form>
-                <p className={styles.linkToSignup}>Don't have an account? <a href='/signup'>Sign up!</a></p>
+                <p className={styles.linkToSignup}>Don&apos;t have an account? <Link href='/signup'>Sign up!</Link></p>
             </div>
         </>  
     )

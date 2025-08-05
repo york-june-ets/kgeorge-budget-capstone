@@ -26,7 +26,7 @@ export default function EditProfile() {
                 phoneNumber: currentCustomer.phoneNumber
             })
         }
-    }, [currentCustomer])
+    }, [currentCustomer, loading])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         setError("")
