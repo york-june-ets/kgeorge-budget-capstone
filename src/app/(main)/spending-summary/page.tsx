@@ -89,7 +89,8 @@ export default function SpendingSummary() {
                     <p className={styles.summaryText}>${getOverallBudgetData(budgets, transactions).spent.toFixed(2)} spent of ${getOverallBudgetData(budgets, transactions).limit.toFixed(2)}</p>
                     <progress className={styles.progressBar} max="100" value={getOverallBudgetData(budgets, transactions).percentage.toString()}>70%</progress>
                     <div className="tableWrapper">
-                        <p className={styles.info}>Budgets marked with &#10071; have exceeded 75% of their spending limit.</p>
+                        <p className={styles.info}>Budgets marked with &#10071; have reached 75% of their limit.</p>
+                        <p className={styles.info}>Budgets marked with &#128721; have reached 100% of their limit.</p>
                         <table className="table">
                             <thead className="thead">
                                 <tr className={styles.tr2}>
@@ -107,7 +108,8 @@ export default function SpendingSummary() {
                                                 <td className="td">${getBudgetSpending(budget, transactions)}</td>
                                                 <td className="td">${budget.budgetLimit}</td>
                                                 <td className="td">{budget.timePeriod}</td>
-                                                {(getBudgetSpending(budget, transactions)/ budget.budgetLimit) * 100 > 75 && <td className={styles.warn}>&#10071;</td>}
+                                                {(getBudgetSpending(budget, transactions)/ budget.budgetLimit) * 100 >= 75 && (getBudgetSpending(budget, transactions)/ budget.budgetLimit) * 100 < 100 && <td className={styles.warn}>&#10071;</td>}
+                                                {(getBudgetSpending(budget, transactions)/ budget.budgetLimit) * 100 >= 100 && <td className={styles.warn}>&#128721;</td>}
                                             </tr>
                                     ))
                                 }
