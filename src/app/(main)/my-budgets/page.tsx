@@ -115,15 +115,14 @@ export default function MyBudgets() {
     return (
         <div className="background">
             <div className="book">
-                <div className="page-left"></div>
-                <div className="page-right">
+                <div className="page-left">
                     <div className="page-header">
-                        <h1 className={styles.title}>Budget Management</h1>
+                        <h1 className="title">Budget Management</h1>
                     </div>
                     {!edit && 
                         <>
                             <h2 className="subtitle">ADD NEW BUDGET</h2>
-                            <form className={styles.form} onSubmit={handleSubmit}>
+                            <form className="form" onSubmit={handleSubmit}>
                                 <select className={styles.category} name="category" disabled={loading} onChange={handleChange}>
                                     <option value="">Category*</option>
                                     {
@@ -140,7 +139,7 @@ export default function MyBudgets() {
                                         <option value={TimePeriod.QUARTER}>QUARTER</option>
                                         <option value={TimePeriod.YEAR}>YEAR</option>
                                     </select>
-                                    <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                    <button className="submit" type="submit" disabled={loading}>Create</button>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
@@ -149,7 +148,7 @@ export default function MyBudgets() {
                     {edit && 
                         <>
                             <h2 className="subtitle">ADD NEW BUDGET</h2>
-                            <form className={styles.form} onSubmit={handleEditSubmit}>
+                            <form className="form" onSubmit={handleEditSubmit}>
                                 <select className={styles.category} name="category" value={selectedCategory} disabled={true} onChange={handleChange}>
                                     <option value="">Category*</option>
                                     {
@@ -166,29 +165,32 @@ export default function MyBudgets() {
                                         <option value={TimePeriod.QUARTER}>QUARTER</option>
                                         <option value={TimePeriod.YEAR}>YEAR</option>
                                     </select>
-                                    <button className={styles.submit} type="submit" name="action" value="save" disabled={loading}>Save</button>
-                                    <button className={styles.submit} type="submit" name="action" value="delete" disabled={loading}>Delete</button>
+                                    <button className="submit" type="submit" name="action" value="save" disabled={loading}>Save</button>
+                                    <button className="submit" type="submit" name="action" value="delete" disabled={loading}>Delete</button>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
                         </>
                     }
+                </div>
+                <div className="page-right">
+                    <div className="page-header"></div>
                     <h2 className="subtitle">VIEW BUDGETS</h2>
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
+                    <div className="tableWrapper">
+                        <table className="table">
+                            <thead className="thead">
                                 <tr className={styles.tr}>
-                                    <th className={styles.th}>Category</th>
-                                    <th className={styles.th}>Limit/Time Period</th>
+                                    <th className="th">Category</th>
+                                    <th className="th">Limit/Time Period</th>
                                 </tr>
                             </thead>
-                            <tbody className={styles.tbody}>
+                            <tbody className="tbody">
                             {
                                 budgets.map(budget => (
                                     <tr className={styles.tr} key={budget.id}>
-                                        <td className={styles.td}>{budget.category}</td>
-                                        <td className={styles.td}>${budget.budgetLimit} / {budget.timePeriod}</td>
-                                        <td className={styles.edit} onClick={() => openEdit(budget)}>&#8942;</td>
+                                        <td className="td">{budget.category}</td>
+                                        <td className="td">${budget.budgetLimit} / {budget.timePeriod}</td>
+                                        <td className="edit" onClick={() => openEdit(budget)}>&#8942;</td>
                                     </tr>
                                 ))
                             }

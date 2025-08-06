@@ -100,18 +100,17 @@ export default function MyCategories() {
     return (
         <div className="background">
             <div className="book">
-                <div className="page-left"></div>
-                <div className="page-right">
+                <div className="page-left">
                     <div className="page-header">
-                        <h1 className={styles.title}>Category Management</h1>
+                        <h1 className="title">Category Management</h1>
                     </div>
                     { !edit && 
                         <>
                             <h2 className="subtitle">ADD NEW CATEGORY</h2>
-                            <form className={styles.form} onSubmit={handleSubmit}>
+                            <form className="form" onSubmit={handleSubmit}>
                                 <div className={styles.row}>
                                     <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
-                                    <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                    <button className="submit" type="submit" disabled={loading}>Create</button>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
@@ -120,30 +119,33 @@ export default function MyCategories() {
                     {edit && 
                         <>
                             <h2 className="subtitle">EDIT CATEGORY</h2>
-                            <form className={styles.form} onSubmit={handleEditSubmit}>
+                            <form className="form" onSubmit={handleEditSubmit}>
                                 <div className={styles.row2}>
                                     <input className={styles.name} type="text" name="name" placeholder="Category Name*" value={categoryRequest.name} onChange={handleChange} disabled={loading} required></input>
-                                    <button className={styles.submit} type="submit" name="action" value="save" disabled={loading}>Save</button>
-                                    <button className={styles.submit} type="submit" name="action" value="delete" disabled={loading}>Delete</button>
+                                    <button className="submit" type="submit" name="action" value="save" disabled={loading}>Save</button>
+                                    <button className="submit" type="submit" name="action" value="delete" disabled={loading}>Delete</button>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
                         </>
                     }
+                </div>
+                <div className="page-right">
+                    <div className="page-header"></div>
                     <h2 className="subtitle">VIEW CATEGORIES</h2>
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
+                    <div className="tableWrapper">
+                        <table className="table">
+                            <thead className="thead">
                                 <tr className={styles.tr}>
-                                    <th className={styles.th}>Name</th>
+                                    <th className="th">Name</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.tbody}>
                             {
                                 categories.map(category => (
                                     <tr className={styles.tr} key={category.id}>
-                                        <td className={styles.td}>{category.name}</td>
-                                        <td className={styles.edit} onClick={() => openEdit(category)}>&#8942;</td>
+                                        <td className="td">{category.name}</td>
+                                        <td className="edit" onClick={() => openEdit(category)}>&#8942;</td>
                                     </tr>
                                 ))
                             }

@@ -131,3 +131,48 @@
     margin-top: 30px;
     padding: 10px 0;
 }
+.tableWrapper {
+    width: 100%;
+    overflow-y:scroll;
+    max-height: 100%;
+    margin-bottom: 50px;
+}
+
+.table {
+    border-collapse: collapse;
+}
+
+.table, .thead {
+    width: 100%;
+}
+
+.title {
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 300;
+    font-size: 35px;
+    margin: 10px 0 0 50px;
+    width: 100px;
+}
+
+.form {
+    width: 90%;
+}
+
+.form input, .form select, .form .submit {
+    background-color: #edf8ff;
+    border: 1px solid black;
+    margin: 5px 0;
+    padding: 5px 5px;
+    min-width: 0;
+}
+
+.th, .td {
+    padding: 5px 5px;
+    background-color: #edf8ff;
+    border: 1px solid #4a494926;
+}
+
+.edit {
+    margin-top: 10px;
+}

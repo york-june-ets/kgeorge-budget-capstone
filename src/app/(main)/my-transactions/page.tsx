@@ -226,77 +226,8 @@ export default function MyTransactions() {
         <div className="background">
             <div className="book">
                 <div className="page-left">
-                    {edit &&
-                            <h2 className="subtitle">VIEW TRANSACTION DETAIL</h2>
-                        }
-                        {!edit &&
-                            <h2 className="subtitle">VIEW TRANSACTIONS</h2>
-                        }
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
-                                <tr className={styles.tr}>
-                                    <th className={styles.th}>Date</th>
-                                    <th className={styles.th}>Description</th>
-                                    <th className={styles.th}>Account</th>
-                                    <th className={styles.th}>Amount</th>
-                                    <th className={styles.th}>Repeat</th>
-                                </tr>
-                            </thead>
-                            <tbody className={styles.tbody}>
-                            {!edit &&
-                                transactions.map(transaction => (
-                                    <tr className={styles.tr} key={transaction.id}>
-                                        <td className={styles.td}>{transaction.date}</td>
-                                        <td className={styles.td}>{transaction.description}</td>
-                                        <td className={styles.td}>{transaction.account.name}</td>
-                                        <td className={styles.td}>{getSymbol(transaction.transactionType)} ${transaction.amount}</td>
-                                        <td className={styles.td}>{transaction.repeatInterval} {transaction.repeatUnit}</td>
-                                        <td className={styles.edit} onClick={() => openEdit(transaction)}>&#8942;</td>
-                                    </tr>
-                                ))
-                            }
-                            {edit && transaction &&
-                                <tr className={styles.tr}>
-                                    <td className={styles.td}>{transaction.date}</td>
-                                    <td className={styles.td}>{transaction.description}</td>
-                                    <td className={styles.td}>{transaction.account.name}</td>
-                                    <td className={styles.td}>{getSymbol(transaction.transactionType)} ${transaction.amount}</td>
-                                    <td className={styles.td}>{transaction.repeatInterval} {transaction.repeatUnit}</td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
-                        {edit && transaction && transaction.transactionType === "WITHDRAWAL" && 
-                            <table className={styles.table}>
-                                <thead className={styles.thead}>
-                                    <tr className={styles.tr2}>
-                                        <th className={styles.th}>Category</th>
-                                        <th className={styles.th}>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody className={styles.tbody}>
-                                    {
-                                        transaction.allocations.map((allocation: Allocation) => (
-                                            <tr className={styles.tr2} key={allocation.id}>
-                                                <td className={styles.td}>{allocation.category}</td>
-                                                <td className={styles.td}>{allocation.amount}</td>
-                                                <td className={styles.edit} onClick={() => setEdit(false)}>&#8942;</td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        {edit && transaction && loadingAllocations && <p>Loading Allocations, please wait...</p>}
-                        {edit && transaction && allocationError && <p>{allocationError}</p>}
-                        {loadingTransactions && <p>Loading Trasactions, please wait...</p>}
-                        {transactionError && <p>{transactionError}</p>}
-                    </div>
-                </div>
-                <div className="page-right">
                     <div className="page-header">
-                        <h1 className={styles.title}>Transaction Management</h1>
+                        <h1 className="title">Transaction Management</h1>
                     </div>
                     {edit &&
                         <h2 className="subtitle">EDIT TRANSACTION</h2>
@@ -304,8 +235,8 @@ export default function MyTransactions() {
                     {!edit &&
                         <h2 className="subtitle">ADD NEW TRANSACTION</h2>
                     }
-                        <form className={styles.form} onSubmit={(event) => submitHandler(event)}>
-                            <div className={styles.formRight}>
+                    <form className="form" onSubmit={(event) => submitHandler(event)}>
+                            <div className={styles.formBase}>
                                 <div className={styles.row}>
                                     <input className={styles.date} type="date" name="date" value={transactionRequest.date} onChange={handleChange} disabled={loading} required></input>
                                     <input className={styles.description} type="text" name="description" placeholder="Decription*" value={transactionRequest.description} onChange={handleChange} disabled={loading} required></input>
@@ -335,12 +266,12 @@ export default function MyTransactions() {
                                     <input className={styles.amount} type="text" name="repeatInterval" placeholder="Interval" value={transactionRequest.repeatInterval} onChange={handleChange} disabled={loading}></input>
                                     {edit &&
                                         <div className={styles.buttons}>
-                                            <button className={styles.submit} type="submit" name="action" value="save" disabled={loading}>Save</button>
-                                            <button className={styles.submit} type="submit" name="action" value="delete" disabled={loading}>Delete</button>
+                                            <button className="submit" type="submit" name="action" value="save" disabled={loading}>Save</button>
+                                            <button className="submit" type="submit" name="action" value="delete" disabled={loading}>Delete</button>
                                         </div>
                                     }
                                     {!edit &&
-                                        <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                        <button className="submit" type="submit" disabled={loading}>Create</button>
                                     }
                                 </div>
                             </div>
@@ -364,6 +295,77 @@ export default function MyTransactions() {
                             }
                         </form>
                         {error && <p>{error}</p>}
+                    </div>
+                <div className="page-right">
+                    <div className="page-header"></div>
+                    {edit &&
+                            <h2 className="subtitle">VIEW TRANSACTION DETAIL</h2>
+                        }
+                        {!edit &&
+                            <h2 className="subtitle">VIEW TRANSACTIONS</h2>
+                        }
+                    <div className="tableWrapper">
+                        <table className="table">
+                            <thead className="thead">
+                                <tr className={styles.tr}>
+                                    <th className="th">Date</th>
+                                    <th className="th">Description</th>
+                                    <th className="th">Account</th>
+                                    <th className="th">Amount</th>
+                                    <th className="th">Repeat</th>
+                                </tr>
+                            </thead>
+                            <tbody className="tbody">
+                            {!edit &&
+                                transactions.map(transaction => (
+                                    <tr className={styles.tr} key={transaction.id}>
+                                        <td className="td">{transaction.date}</td>
+                                        <td className="td">{transaction.description}</td>
+                                        <td className="td">{transaction.account.name}</td>
+                                        <td className="td">{getSymbol(transaction.transactionType)} ${transaction.amount}</td>
+                                        <td className="td">{transaction.repeatInterval} {transaction.repeatUnit}</td>
+                                        <td className="edit" onClick={() => openEdit(transaction)}>&#8942;</td>
+                                    </tr>
+                                ))
+                            }
+                            {edit && transaction &&
+                                <tr className={styles.tr}>
+                                    <td className="td">{transaction.date}</td>
+                                    <td className="td">{transaction.description}</td>
+                                    <td className="td">{transaction.account.name}</td>
+                                    <td className="td">{getSymbol(transaction.transactionType)} ${transaction.amount}</td>
+                                    <td className="td">{transaction.repeatInterval} {transaction.repeatUnit}</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        <br/><br/><br/>
+                        {edit && transaction && transaction.transactionType === "WITHDRAWAL" && 
+                            <table className="table">
+                                <thead className="thead">
+                                    <tr className={styles.tr2}>
+                                        <th className="th">Category</th>
+                                        <th className="th">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="tbody">
+                                    {
+                                        transaction.allocations.map((allocation: Allocation) => (
+                                            <tr className={styles.tr2} key={allocation.id}>
+                                                <td className="td">{allocation.category}</td>
+                                                <td className="td">{allocation.amount}</td>
+                                                <td className="edit" onClick={() => setEdit(false)}>&#8942;</td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        {edit && transaction && loadingAllocations && <p>Loading Allocations, please wait...</p>}
+                        {edit && transaction && allocationError && <p>{allocationError}</p>}
+                        {loadingTransactions && <p>Loading Trasactions, please wait...</p>}
+                        {transactionError && <p>{transactionError}</p>}
+                    </div>
                 </div>
             </div>
             <div className="buttons">

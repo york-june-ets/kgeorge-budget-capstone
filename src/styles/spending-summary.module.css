@@ -1,32 +1,3 @@
-.title {
-    color: white;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-weight: 300;
-    font-size: 35px;
-    margin: 10px 0 0 50px;
-    width: 100px;
-}
-
-.tableWrapper {
-    width: 100%;
-    overflow-y:scroll;
-    height: 175px;
-}
-
-.tableWrapper2 {
-    width: 100%;
-    overflow-y:scroll;
-    height: 117px;
-}
-
-.table {
-    border-collapse: collapse;
-}
-
-.table, .thead {
-    width: 100%;
-}
-
 .tr {
     width: 90%;
     display: grid;
@@ -36,8 +7,6 @@
     font-size: 14px;
 }
 
-.th, .td {
-    padding: 5px 5px;
-    background-color: #edf8ff;
-    border: 1px solid #4a494926;
+.pieChart {
+    margin-bottom: 20px;
 }

@@ -112,15 +112,14 @@ export default function MyAccounts() {
     return (
         <div className="background">
             <div className="book">
-                <div className="page-left"></div>
-                <div className="page-right">
-                    <div className="page-header">
-                        <h1 className={styles.title}>Account Management</h1>
+                <div className="page-left">
+                     <div className="page-header">
+                        <h1 className="title">Account Management</h1>
                     </div>
                     {!edit && 
                         <>
                             <h2 className="subtitle">ADD NEW ACCOUNT</h2>
-                            <form className={styles.form} onSubmit={handleSubmit}>
+                            <form className="form" onSubmit={handleSubmit}>
                                 <input className={styles.name} type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
                                 <div className={styles.row}>
                                     <select className={styles.dropdown} name="type" disabled={loading} onChange={handleChange}>
@@ -131,7 +130,7 @@ export default function MyAccounts() {
                                         <option value={AccountType.OTHER}>OTHER</option>
                                     </select>
                                     <input className={styles.balance} type="text" name="balance" placeholder="0.00" value={accountRequest.balance} onChange={handleChange} disabled={loading} required></input>
-                                    <button className={styles.submit} type="submit" disabled={loading}>Create</button>
+                                    <button className="submit" type="submit" disabled={loading}>Create</button>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
@@ -140,7 +139,7 @@ export default function MyAccounts() {
                     {edit &&
                         <>
                             <h2 className="subtitle">EDIT ACCOUNT</h2>
-                            <form className={styles.form} onSubmit={handleEditSubmit}>
+                            <form className="form" onSubmit={handleEditSubmit}>
                                 <input className={styles.name} type="text" name="name" placeholder="Account Name*" value={accountRequest.name} onChange={handleChange} disabled={loading} required></input>
                                 <div className={styles.row2}>
                                     <select className={styles.dropdown} name="type" value={selectedOption} disabled={loading} onChange={handleChange}>
@@ -151,31 +150,34 @@ export default function MyAccounts() {
                                         <option value={AccountType.OTHER}>OTHER</option>
                                     </select>
                                     <input className={styles.balance} type="text" name="balance" value={accountRequest.balance} disabled={true} required></input>
-                                    <button className={styles.submit} name="action" value="save" type="submit" disabled={loading}>Save</button>
-                                    <button className={styles.submit} name="action" value="delete" type="submit" disabled={loading}>Delete</button>
+                                    <button className="submit" name="action" value="save" type="submit" disabled={loading}>Save</button>
+                                    <button className="submit" name="action" value="delete" type="submit" disabled={loading}>Delete</button>
                                 </div>
                                 {error && <p>{error}</p>}
                             </form>
                         </>
                     }
+                </div>
+                <div className="page-right">
+                    <div className="page-header"></div>
                     <h2 className="subtitle">VIEW ACCOUNTS</h2>
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
+                    <div className="tableWrapper">
+                        <table className="table">
+                            <thead className="thead">
                                 <tr className={styles.tr}>
-                                    <th className={styles.th}>Name</th>
-                                    <th className={styles.th}>Type</th>
-                                    <th className={styles.th}>Balance</th>
+                                    <th className="th">Name</th>
+                                    <th className="th">Type</th>
+                                    <th className="th">Balance</th>
                                 </tr>
                             </thead>
-                            <tbody className={styles.tbody}>
+                            <tbody className="tbody">
                             {
                                 accounts.map(account => (
                                     <tr className={styles.tr} key={account.id}>
-                                        <td className={styles.td}>{account.name}</td>
-                                        <td className={styles.td}>{account.type}</td>
-                                        <td className={styles.td}>${account.balance}</td>
-                                        <td className={styles.edit} onClick={() => openEdit(account)}>&#8942;</td>
+                                        <td className="td">{account.name}</td>
+                                        <td className="td">{account.type}</td>
+                                        <td className="td">${account.balance.toFixed(2)}</td>
+                                        <td className="edit" onClick={() => openEdit(account)}>&#8942;</td>
                                     </tr>
                                 ))
                             }

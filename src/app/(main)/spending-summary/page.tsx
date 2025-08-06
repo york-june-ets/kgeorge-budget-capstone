@@ -27,29 +27,11 @@ export default function SpendingSummary() {
         <div className="background">
             <div className="book">
                 <div className="page-left">
-                    <h2 className="subtitle">TOP 5 SPENDING CATEGORIES</h2>
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
-                                <tr className={styles.tr}>
-                                    <th className={styles.th}>Category</th>
-                                    <th className={styles.th}>Total Spent</th>
-                                </tr>
-                            </thead>
-                            <tbody className={styles.tbody}>
-                                {
-                                    [...categories].sort((a,b) => getCategorySpending(b.name, transactions) - getCategorySpending(a.name, transactions))
-                                    .slice(0,5).map(category => (
-                                        <tr className={styles.tr} key={category.id}>
-                                            <td className={styles.td}>{category.name}</td>
-                                            <td className={styles.td}>${getCategorySpending(category.name, transactions).toFixed(2)}</td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
+                    <div className="page-header">
+                        <h1 className="title">Spending Summary</h1>
                     </div>
-                    <svg height="300" width="300" viewBox="0 0 20 20">
+                    <h2 className="subtitle">TOP 5 SPENDING CATEGORIES</h2>
+                    <svg className={styles.pieChart} height="150" width="150" viewBox="0 0 20 20">
                         <circle r="10" cx="10" cy="10" fill="lightblue" />
 
                         {categories && transactions && total &&
@@ -76,28 +58,48 @@ export default function SpendingSummary() {
                                     transform={`rotate(-90) translate(-20)`}
                                 />
                                 )
-                            })}
-                        </svg>
-                    </div>
-                <div className="page-right">
-                    <div className="page-header">
-                        <h1 className={styles.title}>Spending Summary</h1>
-                    </div>
-                    <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
-                    <div className={styles.tableWrapper2}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
+                            })
+                        }
+                    </svg>
+                    <div className="tableWrapper">
+                        <table className="table">
+                            <thead className="thead">
                                 <tr className={styles.tr}>
-                                    <th className={styles.th}>Category</th>
-                                    <th className={styles.th}>Current Status</th>
+                                    <th className="th">Category</th>
+                                    <th className="th">Total Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody className="tbody">
+                                {
+                                    [...categories].sort((a,b) => getCategorySpending(b.name, transactions) - getCategorySpending(a.name, transactions))
+                                    .slice(0,5).map(category => (
+                                        <tr className={styles.tr} key={category.id}>
+                                            <td className="td">{category.name}</td>
+                                            <td className="td">${getCategorySpending(category.name, transactions).toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className="page-right">
+                    <div className="page-header"></div>
+                    <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
+                    <div className="tableWrapper">
+                        <table className="table">
+                            <thead className="thead">
+                                <tr className={styles.tr}>
+                                    <th className="th">Category</th>
+                                    <th className="th">Current Status</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.tbody}>
                                 {
                                     budgets.map(budget => (
                                         <tr className={styles.tr} key={budget.id}>
-                                            <td className={styles.td}>{budget.category}</td>
-                                            <td className={styles.td}>${getBudgetSpending(budget, transactions)} / {budget.timePeriod}</td>
+                                            <td className="td">{budget.category}</td>
+                                            <td className="td">${getBudgetSpending(budget, transactions)} / {budget.timePeriod}</td>
                                         </tr>
                                     ))
                                 }
