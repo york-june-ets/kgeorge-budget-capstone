@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import styles from "@/styles/spending-summary.module.css"
 import { BudgetContext } from "@/context/BudgetContext"
-import { getBudgetSpending, getTotalBudgetPercentage } from "@/lib/budget"
+import { getBudgetSpending, getOverallBudgetData} from "@/lib/budget"
 
 export default function SpendingSummary() {
     const router = useRouter()
@@ -86,7 +86,8 @@ export default function SpendingSummary() {
                 <div className="page-right">
                     <div className="page-header"></div>
                     <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
-                    <progress className={styles.progressBar} max="100" value={getTotalBudgetPercentage(budgets, transactions).toString()}>70%</progress>
+                    <p>${getOverallBudgetData(budgets, transactions).spent.toFixed(2)} spent of ${getOverallBudgetData(budgets, transactions).limit.toFixed(2)}</p>
+                    <progress className={styles.progressBar} max="100" value={getOverallBudgetData(budgets, transactions).percentage.toString()}>70%</progress>
                     <div className="tableWrapper">
                         <table className="table">
                             <thead className="thead">
