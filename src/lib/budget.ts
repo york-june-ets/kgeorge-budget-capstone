@@ -67,8 +67,8 @@ export const getBudgetSpending = (budget: Budget, transactions: Transaction[]) =
 }
 
 export const getOverallBudgetData = (budgets: Budget[], transactions: Transaction[]) => {
-    let totalLimit = 0;
-    let totalSpent = 0;
+    let totalLimit = 0
+    let totalSpent = 0
     budgets.map(budget => {
         totalLimit += budget.budgetLimit
         totalSpent += getBudgetSpending(budget, transactions)

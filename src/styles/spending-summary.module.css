@@ -9,7 +9,7 @@
 .tr2 {
     width: 90%;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr .2fr;
     text-align: left;
     margin: auto;
     font-size: 14px;
@@ -23,4 +23,19 @@
     width: 90%;
     margin-bottom: 20px;
     padding: 20px;
+}
+
+.warn {
+    margin-top: 4px;
+}
+
+.summaryText {
+    margin: 0;
+}
+
+.info {
+    font-size: 14px;
+    width: 90%;
+    margin: auto;
+    padding: 0 0 5px 5px;
 }

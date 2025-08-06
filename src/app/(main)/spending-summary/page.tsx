@@ -86,9 +86,10 @@ export default function SpendingSummary() {
                 <div className="page-right">
                     <div className="page-header"></div>
                     <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
-                    <p>${getOverallBudgetData(budgets, transactions).spent.toFixed(2)} spent of ${getOverallBudgetData(budgets, transactions).limit.toFixed(2)}</p>
+                    <p className={styles.summaryText}>${getOverallBudgetData(budgets, transactions).spent.toFixed(2)} spent of ${getOverallBudgetData(budgets, transactions).limit.toFixed(2)}</p>
                     <progress className={styles.progressBar} max="100" value={getOverallBudgetData(budgets, transactions).percentage.toString()}>70%</progress>
                     <div className="tableWrapper">
+                        <p className={styles.info}>Budgets marked with &#10071; have exceeded 75% of their spending limit.</p>
                         <table className="table">
                             <thead className="thead">
                                 <tr className={styles.tr2}>
@@ -101,12 +102,13 @@ export default function SpendingSummary() {
                             <tbody className={styles.tbody}>
                                 {
                                     budgets.map(budget => (
-                                        <tr className={styles.tr2} key={budget.id}>
-                                            <td className="td">{budget.category}</td>
-                                            <td className="td">${getBudgetSpending(budget, transactions)}</td>
-                                            <td className="td">${budget.budgetLimit}</td>
-                                            <td className="td">{budget.timePeriod}</td>
-                                        </tr>
+                                            <tr className={styles.tr2} key={budget.id}>
+                                                <td className="td">{budget.category}</td>
+                                                <td className="td">${getBudgetSpending(budget, transactions)}</td>
+                                                <td className="td">${budget.budgetLimit}</td>
+                                                <td className="td">{budget.timePeriod}</td>
+                                                {(getBudgetSpending(budget, transactions)/ budget.budgetLimit) * 100 > 75 && <td className={styles.warn}>&#10071;</td>}
+                                            </tr>
                                     ))
                                 }
                             </tbody>
