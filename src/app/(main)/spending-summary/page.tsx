@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import styles from "@/styles/spending-summary.module.css"
 import { BudgetContext } from "@/context/BudgetContext"
-import { getBudgetSpending } from "@/lib/budget"
+import { getBudgetSpending, getTotalBudgetPercentage } from "@/lib/budget"
 
 export default function SpendingSummary() {
     const router = useRouter()
@@ -86,20 +86,25 @@ export default function SpendingSummary() {
                 <div className="page-right">
                     <div className="page-header"></div>
                     <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
+                    <progress className={styles.progressBar} max="100" value={getTotalBudgetPercentage(budgets, transactions).toString()}>70%</progress>
                     <div className="tableWrapper">
                         <table className="table">
                             <thead className="thead">
-                                <tr className={styles.tr}>
+                                <tr className={styles.tr2}>
                                     <th className="th">Category</th>
-                                    <th className="th">Current Status</th>
+                                    <th className="th">Spent</th>
+                                    <th className="th">Limit</th>
+                                    <th className="th">Period</th>
                                 </tr>
                             </thead>
                             <tbody className={styles.tbody}>
                                 {
                                     budgets.map(budget => (
-                                        <tr className={styles.tr} key={budget.id}>
+                                        <tr className={styles.tr2} key={budget.id}>
                                             <td className="td">{budget.category}</td>
-                                            <td className="td">${getBudgetSpending(budget, transactions)} / {budget.timePeriod}</td>
+                                            <td className="td">${getBudgetSpending(budget, transactions)}</td>
+                                            <td className="td">${budget.budgetLimit}</td>
+                                            <td className="td">{budget.timePeriod}</td>
                                         </tr>
                                     ))
                                 }

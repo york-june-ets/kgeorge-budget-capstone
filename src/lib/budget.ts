@@ -65,3 +65,13 @@ export const getBudgetSpending = (budget: Budget, transactions: Transaction[]) =
     })
     return getCategorySpending(budget.category, filteredTransactions)
 }
+
+export const getTotalBudgetPercentage = (budgets: Budget[], transactions: Transaction[]) => {
+    let total = 0;
+    let spent = 0;
+    budgets.map(budget => {
+        total += budget.budgetLimit
+        spent += getBudgetSpending(budget, transactions)
+    })
+    return (spent/total) * 100
+}
