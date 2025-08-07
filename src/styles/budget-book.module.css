@@ -1,6 +1,6 @@
 .cover {
-    width: 500px;
-    height: 700px;
+    width: 600px;
+    height: 800px;
     background-position: center;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     display: flex;
@@ -24,7 +24,7 @@
 .dots {
     display: flex;
     flex-direction: row;
-    padding: 30px;
+    padding: 40px;
     gap: 10px;
     align-self: end;
 }
@@ -70,17 +70,17 @@
     text-decoration: none;
     text-align: end;
     width: inherit;
-    margin-right: 50px;
+    margin: 100px 50px 0 0;
 }
 
 .city {
-    width: 400px;
-    height: 400px;
+    width: 550px;
+    height: 550px;
     border-radius: 50%;
     z-index: 1000;
     position: absolute;
     object-fit: cover;
     border: 30px solid white;
-    bottom: -90px;
-    left: -130px;
+    bottom: -130px;
+    left: -180px;
 }
