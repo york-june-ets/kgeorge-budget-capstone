@@ -11,10 +11,10 @@ import { AccountContext } from "@/context/AccountContext"
 import { TransactionType } from "@/types/TransactionType"
 import { RepeatUnit } from "@/types/RepeatUnit"
 import { CategoryContext } from "@/context/CategoryContext"
-import { fetchArchiveTransaction, fetchCreateTransaction, fetchUpdateTransaction } from "@/lib/transaction"
+import { fetchArchiveTransaction, fetchCreateTransaction, fetchCustomerTransactions, fetchUpdateTransaction } from "@/lib/transaction"
 import { TransactionContext } from "@/context/TransactionContext"
 import { Allocation } from "@/types/Allocation"
-import { fetchTransactionAllocations } from "@/lib/allocation"
+import { TransactionFilters } from "@/types/TransactionFilters"
 
 export default function MyTransactions() {
     const [error, setError] = useState<string>("")
@@ -42,6 +42,37 @@ export default function MyTransactions() {
     const [selectedAccount, setSelectedAccount] = useState<string | "">("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
     const [selectedType, setSelectedType] = useState<string>("")
+    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: undefined, dateTo: undefined, accountId: undefined, categoryId: undefined})
+    const [transactionList, setTransactionList] = useState<Transaction[]>(transactions)
+
+    useEffect(() => {
+        const getFilteredTransactions = async() => {
+            try {
+                if (token) {
+                    const response = await fetchCustomerTransactions(token, transactionFilters)
+                    if (response.ok) {
+                        const data = await response.json()
+                        setTransactionList(data)
+                    } 
+                    else {
+                        const error = await response.json()
+                        setError(error.message)
+                    }
+                }
+            } catch (err) {
+                setError("An unexpected error occured")
+                console.error(err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        if (transactionFilters.dateFrom === undefined && transactionFilters.dateTo === undefined && transactionFilters.accountId === undefined && transactionFilters.categoryId === undefined) {
+            setTransactionList(transactions)
+        } else {
+            setLoading(true)
+            getFilteredTransactions()
+        }
+    },[transactionFilters, transactions])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -60,12 +91,18 @@ export default function MyTransactions() {
             setSelectedUnit(value)
         }
         if (name === "accountId") {
-            console.log(value)
             setSelectedAccount(value)
         }
-        console.log(value)
         setTransactionRequest(prev => ({
             ...prev,
+            [name]: value
+        }))
+    }
+
+    function handleFilterChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+        const {name, value} = event.target
+        setTransactionFilters(prev => ({
+            ...prev, 
             [name]: value
         }))
     }
@@ -173,6 +210,8 @@ export default function MyTransactions() {
         submitEditTransactionRequest()
         resetForm()
     }
+
+    
 
     function resetForm() {
         setEdit(false)
@@ -299,11 +338,36 @@ export default function MyTransactions() {
                 <div className="page-right">
                     <div className="page-header"></div>
                     {edit &&
-                            <h2 className="subtitle">VIEW TRANSACTION DETAIL</h2>
-                        }
-                        {!edit &&
+                        <h2 className="subtitle">VIEW TRANSACTION DETAIL</h2>
+                    }
+                    {!edit &&
+                        <>
                             <h2 className="subtitle">VIEW TRANSACTIONS</h2>
-                        }
+                            <p>Filter:</p>
+                            <form className={styles.filterGrid}>
+                                <label>Start: <input type="date" name="dateFrom" value={transactionFilters.dateFrom} onChange={handleFilterChange} disabled={loading}></input></label>
+                                <label>End: <input type="date" value={transactionFilters.dateTo} onChange={handleFilterChange} disabled={loading}></input></label>
+                                <select name="accountId" disabled={loadingAccounts || loading} onChange={handleFilterChange}>
+                                    <option value={undefined}>Account</option>
+                                    {
+                                        accounts.map(account => (
+                                            <option key={account.id} value={account.id}>{account.name}</option>
+                                        ))
+                                    }
+                                </select>
+                                <select name="categoryId" disabled={loadingCategories || loading} onChange={handleFilterChange}>
+                                    <option value={undefined}>Category</option>
+                                    {
+                                        categories.map(category => (
+                                            <option key={category.id} value={category.id}>{category.name}</option>
+                                        ))
+                                    }
+                                </select>
+                                <button>Clear</button>
+                                <button>Download</button>
+                            </form>
+                        </>
+                    }
                     <div className="tableWrapper">
                         <table className="table">
                             <thead className="thead">
@@ -317,7 +381,7 @@ export default function MyTransactions() {
                             </thead>
                             <tbody className="tbody">
                             {!edit &&
-                                transactions.map(transaction => (
+                                transactionList.map(transaction => (
                                     <tr className={styles.tr} key={transaction.id}>
                                         <td className="td">{transaction.date}</td>
                                         <td className="td">{transaction.description}</td>

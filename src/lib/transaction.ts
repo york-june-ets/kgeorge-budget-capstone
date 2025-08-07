@@ -1,3 +1,4 @@
+import { TransactionFilters } from "@/types/TransactionFilters"
 import { TransactionRequest } from "@/types/TransactionRequest"
 
 export const fetchCreateTransaction = async (token: string, request: TransactionRequest) =>  {
@@ -13,8 +14,18 @@ export const fetchCreateTransaction = async (token: string, request: Transaction
     return response
 }
 
-export const fetchCustomerTransactions = async (token: string) => {
-    const url = `http://localhost:8080/api/transactions`
+export const fetchCustomerTransactions = async (token: string, filters?: TransactionFilters) => {
+    
+    const params = new URLSearchParams();
+
+    if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined) {
+            params.append(key, String(value));
+        }
+        })
+    }
+    const url = `http://localhost:8080/api/transactions?${params.toString()}`
     const response = await fetch(url, {
         method: "GET",
         headers: {'Authorization': `Bearer ${token}`}

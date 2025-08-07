@@ -89,4 +89,20 @@
     gap: 5px;
 }
 
+.filterGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 90%;
+    margin-bottom: 30px;
+}
+
+.filterGrid button, .filterGrid select, .filterGrid input{
+    background-color: #edf8ff;
+    border: 1px solid black;
+    margin: 5px 0;
+    padding: 5px 5px;
+    min-width: 0;
+}
+
 
