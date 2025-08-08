@@ -1,6 +1,6 @@
 export type TransactionFilters = {
-    dateFrom: string | undefined
-    dateTo: string | undefined
-    accountId: number | undefined
-    categoryId: number | undefined
+    dateFrom: string
+    dateTo: string
+    accountId: number | ""
+    categoryId: number | ""
 }

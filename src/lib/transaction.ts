@@ -16,12 +16,12 @@ export const fetchCreateTransaction = async (token: string, request: Transaction
 
 export const fetchCustomerTransactions = async (token: string, filters?: TransactionFilters) => {
     
-    const params = new URLSearchParams();
+    const params = new URLSearchParams()
 
     if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined) {
-            params.append(key, String(value));
+        if (value !== "" && value !== undefined && value !== null) {
+            params.append(key, String(value))
         }
         })
     }
@@ -53,4 +53,29 @@ export const fetchArchiveTransaction = async (token: string, transactionId: numb
         headers: {'Authorization': `Bearer ${token}`}
     })
     return response
+}
+
+export const downloadTransactionCsv = async(token: string, filters?: TransactionFilters) => {
+     const params = new URLSearchParams()
+
+    if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== "" && value !== undefined && value !== null) {
+                params.append(key, String(value))
+            }
+        })
+    }
+    const url = `http://localhost:8080/api/transactions?${params.toString()}&t=${Date.now()}`
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {'Authorization': `Bearer ${token}`}
+    })
+    
+    const blob = await response.blob()
+    const downloadUrl = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = downloadUrl
+    link.download = "transactions.csv"
+    link.click()
+    link.remove()
 }

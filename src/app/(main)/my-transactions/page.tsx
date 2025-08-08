@@ -5,13 +5,13 @@ import { Category } from "@/types/Category"
 import { Transaction } from "@/types/Transaction"
 import { TransactionRequest } from "@/types/TransactionRequest"
 import { useRouter } from "next/navigation"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import styles from "@/styles/my-transactions.module.css"
 import { AccountContext } from "@/context/AccountContext"
 import { TransactionType } from "@/types/TransactionType"
 import { RepeatUnit } from "@/types/RepeatUnit"
 import { CategoryContext } from "@/context/CategoryContext"
-import { fetchArchiveTransaction, fetchCreateTransaction, fetchCustomerTransactions, fetchUpdateTransaction } from "@/lib/transaction"
+import { downloadTransactionCsv, fetchArchiveTransaction, fetchCreateTransaction, fetchCustomerTransactions, fetchUpdateTransaction } from "@/lib/transaction"
 import { TransactionContext } from "@/context/TransactionContext"
 import { Allocation } from "@/types/Allocation"
 import { TransactionFilters } from "@/types/TransactionFilters"
@@ -42,8 +42,9 @@ export default function MyTransactions() {
     const [selectedAccount, setSelectedAccount] = useState<string | "">("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
     const [selectedType, setSelectedType] = useState<string>("")
-    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: undefined, dateTo: undefined, accountId: undefined, categoryId: undefined})
+    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", accountId: "", categoryId: ""})
     const [transactionList, setTransactionList] = useState<Transaction[]>(transactions)
+    const filterFormRef = useRef<HTMLFormElement>(null)
 
     useEffect(() => {
         const getFilteredTransactions = async() => {
@@ -66,7 +67,7 @@ export default function MyTransactions() {
                 setLoading(false)
             }
         }
-        if (transactionFilters.dateFrom === undefined && transactionFilters.dateTo === undefined && transactionFilters.accountId === undefined && transactionFilters.categoryId === undefined) {
+        if (transactionFilters.dateFrom === "" && transactionFilters.dateTo === "" && transactionFilters.accountId === "" && transactionFilters.categoryId === "") {
             setTransactionList(transactions)
         } else {
             setLoading(true)
@@ -100,6 +101,7 @@ export default function MyTransactions() {
     }
 
     function handleFilterChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+        setError("")
         const {name, value} = event.target
         setTransactionFilters(prev => ({
             ...prev, 
@@ -190,7 +192,7 @@ export default function MyTransactions() {
                         response = await fetchArchiveTransaction(token, transaction.id)
                     } else {
                         setError('Something went wrong')
-                        return;
+                        return
                     }
                     if (response.ok) {
                         refresh()
@@ -232,6 +234,21 @@ export default function MyTransactions() {
         setSelectedUnit("")
     }
 
+    const handleDownload = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        setLoading(true)
+        try {
+            if (token) {
+                await downloadTransactionCsv(token, transactionFilters)
+            }
+        } catch (err) {
+            setError("An unexpected error occured")
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     function getSymbol(transactionType: "DEPOSIT" | "WITHDRAWAL"): string {
         if (transactionType === "DEPOSIT") {return "+"}
         return "-"
@@ -259,6 +276,11 @@ export default function MyTransactions() {
     function submitHandler(event: React.FormEvent<HTMLFormElement>) {
         if (!edit) {return handleSubmit(event)}
         else {return handleEditSubmit(event)}
+    }
+
+    function resetFilterForm() {
+        setTransactionFilters({dateTo: "", dateFrom: "", accountId: "", categoryId: ""})
+        filterFormRef.current?.reset()
     }
 
     return (
@@ -344,11 +366,11 @@ export default function MyTransactions() {
                         <>
                             <h2 className="subtitle">VIEW TRANSACTIONS</h2>
                             <p>Filter:</p>
-                            <form className={styles.filterGrid}>
+                            <form className={styles.filterGrid} onSubmit={handleDownload} ref={filterFormRef}>
                                 <label>Start: <input type="date" name="dateFrom" value={transactionFilters.dateFrom} onChange={handleFilterChange} disabled={loading}></input></label>
-                                <label>End: <input type="date" value={transactionFilters.dateTo} onChange={handleFilterChange} disabled={loading}></input></label>
+                                <label>End: <input type="date" name="dateTo" value={transactionFilters.dateTo} onChange={handleFilterChange} disabled={loading}></input></label>
                                 <select name="accountId" disabled={loadingAccounts || loading} onChange={handleFilterChange}>
-                                    <option value={undefined}>Account</option>
+                                    <option value={""}>Account</option>
                                     {
                                         accounts.map(account => (
                                             <option key={account.id} value={account.id}>{account.name}</option>
@@ -356,15 +378,15 @@ export default function MyTransactions() {
                                     }
                                 </select>
                                 <select name="categoryId" disabled={loadingCategories || loading} onChange={handleFilterChange}>
-                                    <option value={undefined}>Category</option>
+                                    <option value={""}>Category</option>
                                     {
                                         categories.map(category => (
                                             <option key={category.id} value={category.id}>{category.name}</option>
                                         ))
                                     }
                                 </select>
-                                <button>Clear</button>
-                                <button>Download</button>
+                                <button type="button" onClick={resetFilterForm}>Clear</button>
+                                <button type="submit">Download</button>
                             </form>
                         </>
                     }
