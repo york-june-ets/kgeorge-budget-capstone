@@ -15,7 +15,6 @@ export const fetchCreateTransaction = async (token: string, request: Transaction
 }
 
 export const fetchCustomerTransactions = async (token: string, filters?: TransactionFilters) => {
-    
     const params = new URLSearchParams()
 
     if (filters) {

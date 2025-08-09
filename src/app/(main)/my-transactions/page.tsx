@@ -42,7 +42,7 @@ export default function MyTransactions() {
     const [selectedAccount, setSelectedAccount] = useState<string | "">("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
     const [selectedType, setSelectedType] = useState<string>("")
-    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", accountId: "", categoryId: ""})
+    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", transactionType: "", accountId: "", categoryId: ""})
     const [transactionList, setTransactionList] = useState<Transaction[]>(transactions)
     const filterFormRef = useRef<HTMLFormElement>(null)
 
@@ -67,7 +67,7 @@ export default function MyTransactions() {
                 setLoading(false)
             }
         }
-        if (transactionFilters.dateFrom === "" && transactionFilters.dateTo === "" && transactionFilters.accountId === "" && transactionFilters.categoryId === "") {
+        if (transactionFilters.dateFrom === "" && transactionFilters.dateTo === "" && transactionFilters.transactionType === "" && transactionFilters.accountId === "" && transactionFilters.categoryId === "") {
             setTransactionList(transactions)
         } else {
             setLoading(true)
@@ -279,7 +279,7 @@ export default function MyTransactions() {
     }
 
     function resetFilterForm() {
-        setTransactionFilters({dateTo: "", dateFrom: "", accountId: "", categoryId: ""})
+        setTransactionFilters({dateTo: "", dateFrom: "", transactionType: "", accountId: "", categoryId: ""})
         filterFormRef.current?.reset()
     }
 
@@ -377,6 +377,11 @@ export default function MyTransactions() {
                                         ))
                                     }
                                 </select>
+                                <select name="transactionType" disabled={loading} onChange={handleFilterChange}>
+                                    <option value={""}>Transaction Type</option>
+                                    <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
+                                    <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
+                                </select>
                                 <select name="categoryId" disabled={loadingCategories || loading} onChange={handleFilterChange}>
                                     <option value={""}>Category</option>
                                     {
@@ -385,8 +390,10 @@ export default function MyTransactions() {
                                         ))
                                     }
                                 </select>
-                                <button type="button" onClick={resetFilterForm}>Clear</button>
-                                <button type="submit">Download</button>
+                                <div className={styles.buttons}>
+                                    <button type="button" onClick={resetFilterForm}>Clear</button>
+                                    <button type="submit">Download</button>
+                                </div>
                             </form>
                         </>
                     }

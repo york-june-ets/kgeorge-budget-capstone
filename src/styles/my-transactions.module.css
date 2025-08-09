@@ -19,7 +19,7 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 5px;
+    gap: 10px;
     width: 100%;
 }
 
@@ -86,7 +86,11 @@
 .buttons {
     display: flex;
     justify-content: space-between;
-    gap: 5px;
+    gap: 10px;
+}
+
+.buttons button {
+    width: 100%;
 }
 
 .filterGrid {
