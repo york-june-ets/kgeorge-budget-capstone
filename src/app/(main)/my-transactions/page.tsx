@@ -42,9 +42,10 @@ export default function MyTransactions() {
     const [selectedAccount, setSelectedAccount] = useState<string | "">("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
     const [selectedType, setSelectedType] = useState<string>("")
-    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", transactionType: "", accountId: "", categoryId: ""})
-    const [transactionList, setTransactionList] = useState<Transaction[]>(transactions)
+    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", transactionType: "", accountId: "", categoryId: "", page: 0})
+    const [transactionContent, settransactionContent] = useState<Transaction[]>(transactions)
     const filterFormRef = useRef<HTMLFormElement>(null)
+    const [currentPage, setCurrentPage] = useState<number>(0)
 
     useEffect(() => {
         const getFilteredTransactions = async() => {
@@ -53,7 +54,7 @@ export default function MyTransactions() {
                     const response = await fetchCustomerTransactions(token, transactionFilters)
                     if (response.ok) {
                         const data = await response.json()
-                        setTransactionList(data)
+                        settransactionContent(data.content)
                     } 
                     else {
                         const error = await response.json()
@@ -68,7 +69,7 @@ export default function MyTransactions() {
             }
         }
         if (transactionFilters.dateFrom === "" && transactionFilters.dateTo === "" && transactionFilters.transactionType === "" && transactionFilters.accountId === "" && transactionFilters.categoryId === "") {
-            setTransactionList(transactions)
+            settransactionContent(transactions)
         } else {
             setLoading(true)
             getFilteredTransactions()
@@ -410,7 +411,7 @@ export default function MyTransactions() {
                             </thead>
                             <tbody className="tbody">
                             {!edit &&
-                                transactionList.map(transaction => (
+                                transactionContent.map(transaction => (
                                     <tr className={styles.tr} key={transaction.id}>
                                         <td className="td">{transaction.date}</td>
                                         <td className="td">{transaction.description}</td>

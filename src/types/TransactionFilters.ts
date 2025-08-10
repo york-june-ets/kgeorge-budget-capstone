@@ -6,4 +6,5 @@ export type TransactionFilters = {
     transactionType: TransactionType | ""
     accountId: number | ""
     categoryId: number | ""
+    page: number
 }
