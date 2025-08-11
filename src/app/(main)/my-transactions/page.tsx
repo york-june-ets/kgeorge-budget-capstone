@@ -1,11 +1,10 @@
 'use client'
 
 import { AuthContext } from "@/context/AuthContext"
-import { Category } from "@/types/Category"
 import { Transaction } from "@/types/Transaction"
 import { TransactionRequest } from "@/types/TransactionRequest"
 import { useRouter } from "next/navigation"
-import { FormEventHandler, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import styles from "@/styles/my-transactions.module.css"
 import { AccountContext } from "@/context/AccountContext"
 import { TransactionType } from "@/types/TransactionType"
@@ -36,45 +35,14 @@ export default function MyTransactions() {
     const [withdrawal, setWithdrawal] = useState<boolean>(false)
     const {accounts, loadingAccounts} = useContext(AccountContext)
     const {categories, loadingCategories} = useContext(CategoryContext)
-    const {transactions, totalPages, loadingTransactions, refresh, transactionError} = useContext(TransactionContext)
+    const {transactions, transactionFilters, setTransactionFilters, totalPages, loadingTransactions, refresh, transactionError} = useContext(TransactionContext)
     const [loadingAllocations, setLoadingAllocations] = useState<boolean>(false)
     const [allocationError, setAllocationError] = useState<string | null>(null)
     const [selectedAccount, setSelectedAccount] = useState<string | "">("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
     const [selectedType, setSelectedType] = useState<string>("")
-    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", transactionType: "", accountId: "", categoryId: "", page: 0})
-    const [transactionContent, settransactionContent] = useState<Transaction[]>(transactions)
     const filterFormRef = useRef<HTMLFormElement>(null)
     const [currentPage, setCurrentPage] = useState<number>(0)
-
-    useEffect(() => {
-        const getFilteredTransactions = async() => {
-            try {
-                if (token) {
-                    const response = await fetchCustomerTransactions(token, transactionFilters)
-                    if (response.ok) {
-                        const data = await response.json()
-                        settransactionContent(data.content)
-                    } 
-                    else {
-                        const error = await response.json()
-                        setError(error.message)
-                    }
-                }
-            } catch (err) {
-                setError("An unexpected error occured")
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        if (transactionFilters.dateFrom === "" && transactionFilters.dateTo === "" && transactionFilters.transactionType === "" && transactionFilters.accountId === "" && transactionFilters.categoryId === "") {
-            settransactionContent(transactions)
-        } else {
-            setLoading(true)
-            getFilteredTransactions()
-        }
-    },[transactionFilters, transactions])
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -223,8 +191,6 @@ export default function MyTransactions() {
         submitEditTransactionRequest()
         resetForm()
     }
-
-    
 
     function resetForm() {
         setEdit(false)
@@ -420,7 +386,7 @@ export default function MyTransactions() {
                             </thead>
                             <tbody className="tbody">
                             {!edit &&
-                                transactionContent.map(transaction => (
+                                transactions.map(transaction => (
                                     <tr className={styles.tr} key={transaction.id}>
                                         <td className="td">{transaction.date}</td>
                                         <td className="td">{transaction.description}</td>

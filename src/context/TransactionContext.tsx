@@ -1,7 +1,7 @@
 'use client'
 
 import { Transaction } from "@/types/Transaction"
-import { createContext, ReactNode, useContext, useEffect, useState } from "react"
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react"
 import { AuthContext } from "./AuthContext"
 import { fetchCustomerTransactions } from "@/lib/transaction"
 import { AccountContext } from "./AccountContext"
@@ -13,6 +13,8 @@ interface TransactionContextValue {
     loadingTransactions: boolean
     transactionError: string
     totalPages: number
+    setTransactionFilters: Dispatch<SetStateAction<TransactionFilters>>
+    transactionFilters: TransactionFilters
 }
 
 export const TransactionContext = createContext<TransactionContextValue>({
@@ -20,7 +22,9 @@ export const TransactionContext = createContext<TransactionContextValue>({
     refresh: () => {},
     loadingTransactions: false,
     transactionError: "",
-    totalPages: 0
+    totalPages: 0,
+    setTransactionFilters: () => {},
+    transactionFilters: {dateFrom: "", dateTo: "", transactionType: "", accountId: "", categoryId: "", page: 0}
 })
 
 export const TransactionProvider: React.FC<{children: ReactNode}> = ({children}) => {
@@ -31,13 +35,14 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
     const [refreshVal, setRefreshVal] = useState<number>(0)
     const accountContext = useContext(AccountContext)
     const [totalPages, setTotalPages] = useState<number>(0)
+    const [transactionFilters, setTransactionFilters] = useState<TransactionFilters>({dateFrom: "", dateTo: "", transactionType: "", accountId: "", categoryId: "", page: 0})
 
     useEffect(() => {
         setLoadingTransactions(true)
         const getCustomerTransactions = async () => {
             try {
                 if (token) {
-                    const response = await fetchCustomerTransactions(token)
+                    const response = await fetchCustomerTransactions(token, transactionFilters)
                     if (response.ok) {
                         const data = await response.json()
                         setTransactions(data.content)
@@ -56,14 +61,14 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
         }
         getCustomerTransactions()
         accountContext.refresh()
-    }, [refreshVal, token])
+    }, [refreshVal, token, transactionFilters])
 
     const refresh = () => {
         setRefreshVal(refreshVal + 1)
     }
 
     return (
-        <TransactionContext.Provider value={{transactions, totalPages, refresh, loadingTransactions, transactionError}}>
+        <TransactionContext.Provider value={{transactions, transactionFilters, setTransactionFilters, totalPages, refresh, loadingTransactions, transactionError}}>
             {children}
         </TransactionContext.Provider>
     )
