@@ -408,11 +408,13 @@ export default function MyTransactions() {
                             }
                             </tbody>
                         </table>
-                        <div className="pagination">
-                            <button type="button" name="page" value={transactionFilters.page - 1} onClick={handleFilterChange}>&larr;</button>
-                            <p>Page {currentPage + 1} of {totalPages}</p>
-                            <button type="button" name="page" value={transactionFilters.page + 1} onClick={handleFilterChange}>&rarr;</button>
-                        </div>
+                        {!edit &&
+                            <div className="pagination">
+                                <button type="button" name="page" value={transactionFilters.page - 1} onClick={handleFilterChange}>&larr;</button>
+                                <p>Page {currentPage + 1} of {totalPages}</p>
+                                <button type="button" name="page" value={transactionFilters.page + 1} onClick={handleFilterChange}>&rarr;</button>
+                            </div>
+                        }
                         <br/><br/><br/>
                         {edit && transaction && transaction.transactionType === "WITHDRAWAL" && 
                             <table className="table">

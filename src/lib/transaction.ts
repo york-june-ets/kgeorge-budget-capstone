@@ -64,7 +64,7 @@ export const downloadTransactionCsv = async(token: string, filters?: Transaction
             }
         })
     }
-    const url = `http://localhost:8080/api/transactions?${params.toString()}&t=${Date.now()}`
+    const url = `http://localhost:8080/api/transactions/download/csv?${params.toString()}`
     const response = await fetch(url, {
         method: "GET",
         headers: {'Authorization': `Bearer ${token}`}
