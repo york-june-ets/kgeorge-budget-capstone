@@ -176,3 +176,12 @@
 .edit {
     margin-top: 10px;
 }
+
+.pagination {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin: 25px auto;
+  height: 20px;
+  align-items: center;
+}

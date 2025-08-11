@@ -5,7 +5,7 @@ import { Category } from "@/types/Category"
 import { Transaction } from "@/types/Transaction"
 import { TransactionRequest } from "@/types/TransactionRequest"
 import { useRouter } from "next/navigation"
-import { useContext, useEffect, useRef, useState } from "react"
+import { FormEventHandler, useContext, useEffect, useRef, useState } from "react"
 import styles from "@/styles/my-transactions.module.css"
 import { AccountContext } from "@/context/AccountContext"
 import { TransactionType } from "@/types/TransactionType"
@@ -36,7 +36,7 @@ export default function MyTransactions() {
     const [withdrawal, setWithdrawal] = useState<boolean>(false)
     const {accounts, loadingAccounts} = useContext(AccountContext)
     const {categories, loadingCategories} = useContext(CategoryContext)
-    const {transactions, loadingTransactions, refresh, transactionError} = useContext(TransactionContext)
+    const {transactions, totalPages, loadingTransactions, refresh, transactionError} = useContext(TransactionContext)
     const [loadingAllocations, setLoadingAllocations] = useState<boolean>(false)
     const [allocationError, setAllocationError] = useState<string | null>(null)
     const [selectedAccount, setSelectedAccount] = useState<string | "">("")
@@ -101,9 +101,19 @@ export default function MyTransactions() {
         }))
     }
 
-    function handleFilterChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    function handleFilterChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | React.MouseEvent<HTMLButtonElement>) {
         setError("")
-        const {name, value} = event.target
+        const target = event.target as HTMLInputElement | HTMLSelectElement | HTMLButtonElement
+        const { name, value } = target;
+        if (name === "page") {
+            if (Number(value) == transactionFilters.page - 1 && Number(value) < 0) {
+                return 
+            } else if (Number(value) == transactionFilters.page + 1. && Number(value) > totalPages - 1) {
+                return 
+            } else {
+                setCurrentPage(Number(value))
+            }
+        }
         setTransactionFilters(prev => ({
             ...prev, 
             [name]: value
@@ -280,7 +290,7 @@ export default function MyTransactions() {
     }
 
     function resetFilterForm() {
-        setTransactionFilters({dateTo: "", dateFrom: "", transactionType: "", accountId: "", categoryId: ""})
+        setTransactionFilters({dateTo: "", dateFrom: "", transactionType: "", accountId: "", categoryId: "", page: 0})
         filterFormRef.current?.reset()
     }
 
@@ -366,7 +376,6 @@ export default function MyTransactions() {
                     {!edit &&
                         <>
                             <h2 className="subtitle">VIEW TRANSACTIONS</h2>
-                            <p>Filter:</p>
                             <form className={styles.filterGrid} onSubmit={handleDownload} ref={filterFormRef}>
                                 <label>Start: <input type="date" name="dateFrom" value={transactionFilters.dateFrom} onChange={handleFilterChange} disabled={loading}></input></label>
                                 <label>End: <input type="date" name="dateTo" value={transactionFilters.dateTo} onChange={handleFilterChange} disabled={loading}></input></label>
@@ -433,6 +442,11 @@ export default function MyTransactions() {
                             }
                             </tbody>
                         </table>
+                        <div className="pagination">
+                            <button type="button" name="page" value={transactionFilters.page - 1} onClick={handleFilterChange}>&larr;</button>
+                            <p>Page {currentPage + 1} of {totalPages}</p>
+                            <button type="button" name="page" value={transactionFilters.page + 1} onClick={handleFilterChange}>&rarr;</button>
+                        </div>
                         <br/><br/><br/>
                         {edit && transaction && transaction.transactionType === "WITHDRAWAL" && 
                             <table className="table">

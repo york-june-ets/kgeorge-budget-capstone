@@ -5,19 +5,22 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { AuthContext } from "./AuthContext"
 import { fetchCustomerTransactions } from "@/lib/transaction"
 import { AccountContext } from "./AccountContext"
+import { TransactionFilters } from "@/types/TransactionFilters"
 
 interface TransactionContextValue {
     transactions: Transaction[]
     refresh: () => void
     loadingTransactions: boolean
     transactionError: string
+    totalPages: number
 }
 
 export const TransactionContext = createContext<TransactionContextValue>({
     transactions: [],
     refresh: () => {},
     loadingTransactions: false,
-    transactionError: ""
+    transactionError: "",
+    totalPages: 0
 })
 
 export const TransactionProvider: React.FC<{children: ReactNode}> = ({children}) => {
@@ -27,6 +30,7 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
     const [transactionError, setTransactionError] = useState<string>("")
     const [refreshVal, setRefreshVal] = useState<number>(0)
     const accountContext = useContext(AccountContext)
+    const [totalPages, setTotalPages] = useState<number>(0)
 
     useEffect(() => {
         setLoadingTransactions(true)
@@ -37,6 +41,7 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
                     if (response.ok) {
                         const data = await response.json()
                         setTransactions(data.content)
+                        setTotalPages(data.totalPages)
                     } else {
                         const error = await response.json()
                         setTransactionError(error.message)
@@ -58,7 +63,7 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
     }
 
     return (
-        <TransactionContext.Provider value={{transactions, refresh, loadingTransactions, transactionError}}>
+        <TransactionContext.Provider value={{transactions, totalPages, refresh, loadingTransactions, transactionError}}>
             {children}
         </TransactionContext.Provider>
     )
