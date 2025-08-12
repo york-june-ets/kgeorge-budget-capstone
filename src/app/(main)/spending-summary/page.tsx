@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react"
 import styles from "@/styles/spending-summary.module.css"
 import { BudgetContext } from "@/context/BudgetContext"
 import { getBudgetSpending, getOverallBudgetData} from "@/lib/budget"
+import { calculateSpendingCoordinates } from "@/lib/transaction"
 
 export default function SpendingSummary() {
     const router = useRouter()
@@ -18,6 +19,18 @@ export default function SpendingSummary() {
     const {budgets} = useContext(BudgetContext)
     const [total, setTotal] = useState<number>(0)
     const colors = ["cornflowerblue", "mediumseagreen", "mediumpurple", "cadetblue", "slategray"]
+    const {token} = useContext(AuthContext)
+    const [coordinates, setCoordinates] = useState<string>("")
+
+    useEffect(() => {
+        const getCoordinates = async() => {
+            if (token) {
+                const coordinates = await calculateSpendingCoordinates(token, "650")
+                setCoordinates(coordinates)
+            }
+        }
+        getCoordinates()
+    },[token, transactions])
 
     useEffect(() => {
         setTotal(getTopFiveTotal(transactions, categories))
@@ -85,6 +98,18 @@ export default function SpendingSummary() {
                 </div>
                 <div className="page-right">
                     <div className="page-header"></div>
+                    <h2 className="subtitle">MONTH-BY-MONTH SPENDING FOR {new Date().getFullYear()}</h2>
+                    {coordinates &&
+                        <svg viewBox="0 0 600 100" className={styles.lineGraph}>
+                            <polyline
+                                className={styles.polyLine}
+                                fill="none"
+                                stroke="#0074d9"
+                                strokeWidth="3"
+                                points={coordinates}
+                            />
+                        </svg>
+                    }
                     <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
                     <p className={styles.summaryText}>${getOverallBudgetData(budgets, transactions).spent.toFixed(2)} spent of ${getOverallBudgetData(budgets, transactions).limit.toFixed(2)}</p>
                     <progress className={styles.progressBar} max="100" value={getOverallBudgetData(budgets, transactions).percentage.toString()}>70%</progress>

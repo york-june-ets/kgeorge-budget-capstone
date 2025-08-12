@@ -39,3 +39,9 @@
     margin: auto;
     padding: 0 0 5px 5px;
 }
+
+.lineGraph {
+    width: 90%;
+    transform: scaleY(-1);
+    margin: 0 auto;
+}
