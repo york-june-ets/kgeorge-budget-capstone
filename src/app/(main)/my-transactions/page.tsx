@@ -190,6 +190,7 @@ export default function MyTransactions() {
         }
         submitEditTransactionRequest()
         resetForm()
+        setTransaction(null)
     }
 
     function resetForm() {
@@ -288,14 +289,14 @@ export default function MyTransactions() {
                                             ))
                                         }
                                     </select>
-                                    <select className={styles.dropdown} name="transactionType" value={selectedType} disabled={loading} onChange={handleChange}>
+                                    <select className={styles.dropdown} name="transactionType" value={selectedType} disabled={loading || edit} onChange={handleChange}>
                                         <option value="">Transaction Type*</option>
                                         <option value={TransactionType.DEPOSIT}>DEPOSIT</option>
                                         <option value={TransactionType.WITHDRAWAL}>WITHDRAWAL</option>
                                     </select>
-                                    <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={withdrawal} required></input>
+                                    <input className={styles.amount} type="text" name="amount" placeholder="0.00" value={transactionRequest.amount} onChange={handleChange} disabled={loading || withdrawal} required></input>
                                     <select className={styles.dropdown} name="repeatUnit" value={selectedUnit} disabled={loading} onChange={handleChange}>
-                                        <option value="">Repeat Unit*</option>
+                                        <option value="">Repeat Unit</option>
                                         <option value={RepeatUnit.DAY}>DAY</option>
                                         <option value={RepeatUnit.WEEK}>WEEK</option>
                                         <option value={RepeatUnit.MONTH}>MONTH</option>
@@ -317,7 +318,7 @@ export default function MyTransactions() {
                                 <div className={styles.allocationWrapper}>
                                 {transactionRequest.allocations.map((allocation, index) => (
                                     <div key={index} className={styles.allocationRow}>
-                                        <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)}disabled={loadingCategories || loading}>
+                                        <select name={`allocation-category-${index}`} value={allocation.category} onChange={(e) => handleAllocationChange(index, "category", e.target.value)} disabled={loadingCategories || loading}>
                                             <option value="">Category*</option>
                                             {
                                                 categories.map((category) => (
@@ -325,10 +326,10 @@ export default function MyTransactions() {
                                                 ))
                                             }
                                         </select>
-                                        <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)}disabled={loading} required/>
+                                        <input type="text" name={`allocation-amount-${index}`} placeholder="0.00" value={allocation.amount} onChange={(e) => handleAllocationChange(index, "amount", e.target.value)} disabled={loading} required/>
                                     </div>
                                 ))}
-                                <button type="button" className={styles.addButton} onClick={handleAddAllocation}>+</button>
+                                <button type="button" className={styles.addButton} onClick={handleAddAllocation} disabled={loading}>+</button>
                             </div>
                             }
                         </form>
