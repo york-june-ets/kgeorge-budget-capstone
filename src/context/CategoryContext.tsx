@@ -37,7 +37,8 @@ export const CategoryProvider: React.FC<{children: ReactNode}> = ({children}) =>
                         setCategories(data)
                     } else {
                         const error = await response.json()
-                        setCategoryError(error.message)
+                        setCategoryError("Error loading categories")
+                        console.error(error.message)
                     }
                 }
             } catch (err) {

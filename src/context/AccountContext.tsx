@@ -37,7 +37,8 @@ export const AccountProvider: React.FC<{children: ReactNode}> = ({children}) => 
                         setAccounts(data)
                     } else {
                         const error = await response.json()
-                        setAccountError(error.message)
+                        console.error(error.message)
+                        setAccountError("Error loading accounts")
                     }
                 }
             } catch (err) {

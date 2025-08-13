@@ -10,10 +10,9 @@ import { AccountContext } from "@/context/AccountContext"
 import { TransactionType } from "@/types/TransactionType"
 import { RepeatUnit } from "@/types/RepeatUnit"
 import { CategoryContext } from "@/context/CategoryContext"
-import { downloadTransactionCsv, fetchArchiveTransaction, fetchCreateTransaction, fetchCustomerTransactions, fetchUpdateTransaction } from "@/lib/transaction"
+import { downloadTransactionCsv, fetchArchiveTransaction, fetchCreateTransaction, fetchUpdateTransaction } from "@/lib/transaction"
 import { TransactionContext } from "@/context/TransactionContext"
 import { Allocation } from "@/types/Allocation"
-import { TransactionFilters } from "@/types/TransactionFilters"
 
 export default function MyTransactions() {
     const [error, setError] = useState<string>("")
@@ -70,22 +69,34 @@ export default function MyTransactions() {
     }
 
     function handleFilterChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | React.MouseEvent<HTMLButtonElement>) {
+        console.log("handle filter change")
         setError("")
         const target = event.target as HTMLInputElement | HTMLSelectElement | HTMLButtonElement
-        const { name, value } = target;
-        if (name === "page") {
-            if (Number(value) == transactionFilters.page - 1 && Number(value) < 0) {
-                return 
-            } else if (Number(value) == transactionFilters.page + 1. && Number(value) > totalPages - 1) {
-                return 
-            } else {
-                setCurrentPage(Number(value))
+        let { name, value } = target;
+        if (name === "pageback" || name === "pagenext") {
+            if (name === "pageback") {
+                if (Number(value) - 1 < 0) {
+                    return 
+                } else {
+                    value = (Number(value) - 1).toString()
+                }
             }
+            if (name === "pagenext") {
+                if (Number(value) + 1 > totalPages - 1) {
+                    return 
+                } else {
+                    value = (Number(value) + 1).toString()
+                }
+            }
+            name = "page"
+            setCurrentPage(Number(value))
         }
+        console.log("set filter")
         setTransactionFilters(prev => ({
             ...prev, 
             [name]: value
         }))
+        console.log(transactionFilters)
     }
 
     function handleAllocationChange(index: number, name: "category" | "amount", value: string) {
@@ -411,9 +422,9 @@ export default function MyTransactions() {
                         </table>
                         {!edit &&
                             <div className="pagination">
-                                <button type="button" name="page" value={transactionFilters.page - 1} onClick={handleFilterChange}>&larr;</button>
+                                <button type="button" name="pageback" value={Number(transactionFilters.page)} onClick={handleFilterChange}>&larr;</button>
                                 <p>Page {currentPage + 1} of {totalPages}</p>
-                                <button type="button" name="page" value={transactionFilters.page + 1} onClick={handleFilterChange}>&rarr;</button>
+                                <button type="button" name="pagenext" value={Number(transactionFilters.page)} onClick={handleFilterChange}>&rarr;</button>
                             </div>
                         }
                         <br/><br/><br/>

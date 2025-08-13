@@ -40,6 +40,7 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
     useEffect(() => {
         setLoadingTransactions(true)
         const getCustomerTransactions = async () => {
+            console.log("get transactions")
             try {
                 if (token) {
                     const response = await fetchCustomerTransactions(token, transactionFilters)
@@ -49,7 +50,8 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
                         setTotalPages(data.totalPages)
                     } else {
                         const error = await response.json()
-                        setTransactionError(error.message)
+                        setTransactionError("Error loading transactions")
+                        console.error(error.message)
                     }
                 }
             } catch (err) {

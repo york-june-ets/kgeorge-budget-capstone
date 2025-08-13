@@ -39,7 +39,8 @@ export const BudgetProvider: React.FC<{children: ReactNode}> = ({children}) => {
                         setBudgets(data)
                     } else {
                         const error = await response.json()
-                        setBudgetError(error.message)
+                        setBudgetError("Error loading budgets")
+                        console.error(error.message)
                     }
                 }
             } catch (err) {
