@@ -21,9 +21,6 @@ export default function EditProfile() {
     useEffect(() => {
         if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
     }, [token, currentCustomer, loading])
-
-    // show nothing while still loading/no local stored customer info
-    if (loading || (!token || !currentCustomer)) {return null}
     
     useEffect(() => {
         if (!loading && currentCustomer) {
@@ -95,6 +92,9 @@ export default function EditProfile() {
             setError("Passwords do not match")
         }
     }
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
 
     return (
         <div className="background">

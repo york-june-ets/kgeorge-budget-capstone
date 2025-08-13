@@ -27,9 +27,6 @@ export default function SpendingSummary() {
         if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
     }, [token, currentCustomer, loading])
 
-    // show nothing while still loading/no local stored customer info
-    if (loading || (!token || !currentCustomer)) {return null}
-
     useEffect(() => {
         const getCoordinates = async() => {
             if (token) {
@@ -43,6 +40,9 @@ export default function SpendingSummary() {
     useEffect(() => {
         setTotal(getTopFiveTotal(transactions, categories))
     }, [categories, transactions])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
 
     return (
         <div className="background">
