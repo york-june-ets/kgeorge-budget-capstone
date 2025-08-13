@@ -281,6 +281,11 @@ export default function MyTransactions() {
         filterFormRef.current?.reset()
     }
 
+    function closeEdit() {
+        setEdit(false)
+        setWithdrawal(false)
+    }
+
     return (
         <div className="background">
             <div className="book">
@@ -394,7 +399,7 @@ export default function MyTransactions() {
                             </form>
                         </>
                     }
-                    <div className="tableWrapper">
+                    <div className="transactionTableWrapper">
                         <table className="table">
                             <thead className="thead">
                                 <tr className={styles.tr}>
@@ -451,7 +456,7 @@ export default function MyTransactions() {
                                             <tr className={styles.tr2} key={allocation.id}>
                                                 <td className="td">{allocation.category}</td>
                                                 <td className="td">{allocation.amount}</td>
-                                                <td className="edit" onClick={() => setEdit(false)}>&#8942;</td>
+                                                <td className="edit" onClick={() => closeEdit()}>&#8942;</td>
                                             </tr>
                                         ))
                                     }
