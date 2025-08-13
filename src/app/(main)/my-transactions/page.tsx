@@ -13,11 +13,12 @@ import { CategoryContext } from "@/context/CategoryContext"
 import { downloadTransactionCsv, fetchArchiveTransaction, fetchCreateTransaction, fetchUpdateTransaction } from "@/lib/transaction"
 import { TransactionContext } from "@/context/TransactionContext"
 import { Allocation } from "@/types/Allocation"
+import Link from "next/link"
 
 export default function MyTransactions() {
     const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
-    const {token, logout} = useContext(AuthContext)
+    const {token, currentCustomer, logout} = useContext(AuthContext)
     const [transactionRequest, setTransactionRequest] = useState<TransactionRequest>({
         date: "",
         accountId: null,
@@ -42,6 +43,14 @@ export default function MyTransactions() {
     const [selectedType, setSelectedType] = useState<string>("")
     const filterFormRef = useRef<HTMLFormElement>(null)
     const [currentPage, setCurrentPage] = useState<number>(0)
+
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -461,6 +470,8 @@ export default function MyTransactions() {
                 <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
                 <button className="topButton" onClick={logout}>Logout</button>
             </div>
+            <Link className="leftPageArr" href="/my-budgets">&larr;</Link>
+            <Link className="rightPageArr" href="/spending-summary">&rarr;</Link>
         </div>
     )
 }

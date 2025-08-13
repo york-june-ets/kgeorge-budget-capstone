@@ -10,13 +10,14 @@ import { Budget } from "@/types/Budget"
 import { BudgetRequest } from "@/types/BudgetRequest"
 import { Category } from "@/types/Category"
 import { TimePeriod } from "@/types/TimePeriod"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 
 export default function MyBudgets() {
     const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
-    const {token, logout} = useContext(AuthContext)
+    const {token, currentCustomer, logout} = useContext(AuthContext)
     const [budgetRequest, setBudgetRequest] = useState<BudgetRequest>({category: "", budgetLimit: "", timePeriod: ""})
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
@@ -26,6 +27,14 @@ export default function MyBudgets() {
     const {budgets, refresh, loadingBudgets, budgetError} = useContext(BudgetContext)
     const {categories} = useContext(CategoryContext)
     
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
+
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setLoading(true)
@@ -206,6 +215,8 @@ export default function MyBudgets() {
                 <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
                 <button className="topButton" onClick={logout}>Logout</button>
             </div>
+            <Link className="leftPageArr" href="/my-categories">&larr;</Link>
+            <Link className="rightPageArr" href="/my-transactions">&rarr;</Link>
         </div>
     )
 }

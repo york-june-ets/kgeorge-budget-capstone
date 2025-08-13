@@ -185,3 +185,52 @@
   height: 20px;
   align-items: center;
 }
+
+.pageFlip {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  top: 50%;
+  width: 100%;
+  gap: 1400px;
+  justify-content: center;
+}
+
+.leftPageArr {
+  position: fixed;
+  top: 50%;
+  left: 10%;
+  text-decoration: none;
+  font-size: 60px;
+  color: rgba(2, 47, 89, 0.573);
+}
+
+.rightPageArr {
+  position: fixed;
+  top: 50%;
+  right: 10%;
+  text-decoration: none;
+  font-size: 60px;
+  color: rgba(2, 47, 89, 0.573);
+}
+
+body button:hover{
+  cursor: pointer;
+  filter: brightness(0.85);
+}
+
+body input:hover, body select:hover, .backCover:hover {
+  cursor: pointer;
+}
+
+.backCover {
+  width: 600px;
+  height: 800px;
+  background-color: #034ba1;
+  box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.8),
+        inset -10px 0 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

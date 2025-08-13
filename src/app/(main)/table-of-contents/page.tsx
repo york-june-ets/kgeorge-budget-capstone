@@ -2,16 +2,26 @@
 
 import { AuthContext } from "@/context/AuthContext"
 import styles from "@/styles/table-of-contents.module.css"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 
 export default function TableOfContents() {
     const router = useRouter()
-    const {logout} = useContext(AuthContext)
+    const {token, currentCustomer, loading, logout} = useContext(AuthContext)
+
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
+
     return (
         <div className="background">
             <div className="book">
-                <div className={styles.backCover} onClick={() => router.push('/')}></div>
+                <div className="backCover" onClick={() => router.push('/')}></div>
                 <div className="page-right">
                     <div className={styles.header}>
                         <h1 className={styles.title}>Budget Handbook</h1>
@@ -67,12 +77,22 @@ export default function TableOfContents() {
                                 <p>View your spending analytics to help you compare your spending to your spending goals.</p>
                             </div>
                         </div>
+                        <div className={styles.row}>
+                            <div className={styles.rowLeft}>
+                                <p className={styles.number}>06</p>
+                                <hr className={styles.hr}></hr>
+                            </div>
+                            <div className={styles.text}>
+                                <h3 onClick={() => router.push('/edit-profile')}>Edit Profile &rarr;</h3>
+                                <p>Change your name, contact information, or login credentials here.</p>
+                            </div>
+                        </div>
                 </div>
             </div>
             <div className="buttons">
-                <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
                 <button className="topButton" onClick={logout}>Logout</button>
             </div>
+            <Link className="rightPageArr" href="/my-accounts">&rarr;</Link>
         </div>
     )
 }

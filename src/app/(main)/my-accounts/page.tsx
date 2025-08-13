@@ -7,19 +7,28 @@ import styles from "@/styles/my-accounts.module.css"
 import { Account } from "@/types/Account"
 import { AccountRequest } from "@/types/AccountRequest"
 import { AccountType } from "@/types/AccountType"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 export default function MyAccounts() {
     const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
-    const {token, logout} = useContext(AuthContext)
+    const {token, currentCustomer, logout} = useContext(AuthContext)
     const [accountRequest, setAccountRequest] = useState<AccountRequest>({name: "", type: "", balance: "0.00"})
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [selectedOption, setSelectedOption] = useState("")
     const [accountId, setAccountId] = useState<number | null>(null)
     const {accounts, refresh, loadingAccounts, accountError} = useContext(AccountContext)
+
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -193,6 +202,8 @@ export default function MyAccounts() {
                 <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
                 <button className="topButton" onClick={logout}>Logout</button>
             </div>
+            <Link className="leftPageArr" href="/table-of-contents">&larr;</Link>
+            <Link className="rightPageArr" href="/my-categories">&rarr;</Link>
         </div>
     )
 }

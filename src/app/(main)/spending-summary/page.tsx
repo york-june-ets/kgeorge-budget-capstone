@@ -10,17 +10,25 @@ import styles from "@/styles/spending-summary.module.css"
 import { BudgetContext } from "@/context/BudgetContext"
 import { getBudgetSpending, getOverallBudgetData} from "@/lib/budget"
 import { calculateSpendingCoordinates } from "@/lib/transaction"
+import Link from "next/link"
 
 export default function SpendingSummary() {
     const router = useRouter()
-    const {logout} = useContext(AuthContext)
     const {categories} = useContext(CategoryContext)
     const {transactions} = useContext(TransactionContext)
     const {budgets} = useContext(BudgetContext)
     const [total, setTotal] = useState<number>(0)
     const colors = ["cornflowerblue", "mediumseagreen", "mediumpurple", "cadetblue", "slategray"]
-    const {token} = useContext(AuthContext)
+    const {token, loading, currentCustomer, logout} = useContext(AuthContext)
     const [coordinates, setCoordinates] = useState<string>("")
+
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
 
     useEffect(() => {
         const getCoordinates = async() => {
@@ -44,7 +52,7 @@ export default function SpendingSummary() {
                         <h1 className="title">Spending Summary</h1>
                     </div>
                     <h2 className="subtitle">TOP 5 SPENDING CATEGORIES</h2>
-                    <svg className={styles.pieChart} height="150" width="150" viewBox="0 0 20 20">
+                    <svg className={styles.pieChart} height="250" width="250" viewBox="0 0 20 20">
                         <circle r="10" cx="10" cy="10" fill="lightblue" />
 
                         {categories && transactions && total &&
@@ -100,6 +108,7 @@ export default function SpendingSummary() {
                     <div className="page-header"></div>
                     <h2 className="subtitle">MONTH-BY-MONTH SPENDING FOR {new Date().getFullYear()}</h2>
                     {coordinates &&
+                    <>
                         <svg viewBox="0 0 600 100" className={styles.lineGraph}>
                             <polyline
                                 className={styles.polyLine}
@@ -109,6 +118,10 @@ export default function SpendingSummary() {
                                 points={coordinates}
                             />
                         </svg>
+                        <div className={styles.months}>
+                            <p>Jan</p><p>Feb</p><p>Mar</p><p>Apr</p><p>May</p><p>Jun</p><p>Jul</p><p>Aug</p><p>Sep</p><p>Oct</p><p>Nov</p><p>Dec</p>
+                        </div>
+                    </>
                     }
                     <h2 className="subtitle">CURRENT BUDGET SPENDING SUMMARY</h2>
                     <p className={styles.summaryText}>${getOverallBudgetData(budgets, transactions).spent.toFixed(2)} spent of ${getOverallBudgetData(budgets, transactions).limit.toFixed(2)}</p>
@@ -148,6 +161,8 @@ export default function SpendingSummary() {
                 <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
                 <button className="topButton" onClick={logout}>Logout</button>
             </div>
+            <Link className="leftPageArr" href="/my-transactions">&larr;</Link>
+            <Link className="rightPageArr" href="/edit-profile">&rarr;</Link>
         </div>
     )
 }

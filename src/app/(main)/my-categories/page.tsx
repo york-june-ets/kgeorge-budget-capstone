@@ -6,18 +6,27 @@ import { fetchCreateCategory, fetchCustomerCategories, fetchUpdateCategory, fetc
 import styles from "@/styles/my-categories.module.css"
 import { Category } from "@/types/Category"
 import { CategoryRequest } from "@/types/CategoryRequest"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 
 export default function MyCategories() {
     const [error, setError] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
-    const {token, logout} = useContext(AuthContext)
+    const {token, currentCustomer, logout} = useContext(AuthContext)
     const [categoryRequest, setCategoryRequest] = useState<CategoryRequest>({name: ""})
     const router = useRouter()
     const [edit, setEdit] = useState<boolean>(false)
     const [categoryId, setCategoryId] = useState<number | null>(null)
     const {categories, refresh, loadingCategories, categoryError} = useContext(CategoryContext)
+
+    //redirect to home if no local stored customer info
+    useEffect(() => {
+        if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
+    }, [token, currentCustomer, loading])
+
+    // show nothing while still loading/no local stored customer info
+    if (loading || (!token || !currentCustomer)) {return null}
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         setError("")
@@ -161,6 +170,8 @@ export default function MyCategories() {
                 <button className="topButton" onClick={() => router.push('/edit-profile')}>Edit Profile</button>
                 <button className="topButton" onClick={logout}>Logout</button>
             </div>
+            <Link className="leftPageArr" href="/my-accounts">&larr;</Link>
+            <Link className="rightPageArr" href="/my-budgets">&rarr;</Link>
         </div>
     )
 }
