@@ -18,14 +18,36 @@ export default function SpendingSummary() {
     const {transactions} = useContext(TransactionContext)
     const {budgets} = useContext(BudgetContext)
     const [total, setTotal] = useState<number>(0)
-    const colors = ["cornflowerblue", "mediumseagreen", "mediumpurple", "cadetblue", "slategray"]
+    const colors = [
+    "#1B3A57",
+    "#2E6F95", 
+    "#4682B4", 
+    "#6CA6CD", 
+    "#A8DADC"  
+    ];
     const {token, loading, currentCustomer, logout} = useContext(AuthContext)
     const [coordinates, setCoordinates] = useState<string>("")
+    const [topCategories, setTopCategories] = useState<{id: number, name: string, spending: number}[]>([])
+    let offset = 0
 
     //redirect to home if no local stored customer info
     useEffect(() => {
         if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
     }, [token, currentCustomer, loading])
+
+    useEffect(() => {
+        if (categories && transactions && total) {
+            setTopCategories(
+                [...categories]
+                .map(category => ({
+                    ...category,
+                    spending: getCategorySpending(category.name, transactions)
+                }))
+                .sort((a, b) => b.spending - a.spending)
+                .slice(0, 5)
+            )
+        }
+    }, [categories, transactions, total])
 
     useEffect(() => {
         const getCoordinates = async() => {
@@ -54,19 +76,10 @@ export default function SpendingSummary() {
                     <h2 className="subtitle">TOP 5 SPENDING CATEGORIES</h2>
                     <svg className={styles.pieChart} height="250" width="250" viewBox="0 0 20 20">
                         <circle r="10" cx="10" cy="10" fill="lightblue" />
-
-                        {categories && transactions && total &&
-                            [...categories]
-                            .sort((a, b) =>
-                                getCategorySpending(b.name, transactions) - getCategorySpending(a.name, transactions)
-                            )
-                            .slice(0, 5)
-                            .map((category, index) => {
-                                const spending = getCategorySpending(category.name, transactions);
-                                const percent = spending / total
-                                const dash = (percent * 31.4)
-
-                                return (
+                        {topCategories && topCategories.map((category, index) => {
+                            const percent = total ? category.spending / total : 0;
+                            const dash = percent * 31.4;
+                            const slice = (
                                 <circle
                                     key={category.name}
                                     r={5}
@@ -76,11 +89,13 @@ export default function SpendingSummary() {
                                     stroke={colors[index]}
                                     strokeWidth={10}
                                     strokeDasharray={`${dash} 31.4`}
-                                    transform={`rotate(-90) translate(-20)`}
+                                    strokeDashoffset={-offset}
+                                    transform="rotate(-90 10 10)"
                                 />
-                                )
-                            })
-                        }
+                            );
+                            offset += dash;
+                            return slice;
+                        })}
                     </svg>
                     <div className="tableWrapper">
                         <table className="table">
@@ -88,18 +103,21 @@ export default function SpendingSummary() {
                                 <tr className={styles.tr}>
                                     <th className="th">Category</th>
                                     <th className="th">Total Spent</th>
+                                    <th className="th">Legend</th>
                                 </tr>
                             </thead>
                             <tbody className="tbody">
-                                {
-                                    [...categories].sort((a,b) => getCategorySpending(b.name, transactions) - getCategorySpending(a.name, transactions))
-                                    .slice(0,5).map(category => (
-                                        <tr className={styles.tr} key={category.id}>
-                                            <td className="td">{category.name}</td>
-                                            <td className="td">${getCategorySpending(category.name, transactions).toFixed(2)}</td>
-                                        </tr>
-                                    ))
-                                }
+                                {topCategories && topCategories.map((category, index) => (
+                                    <tr className={styles.tr} key={category.id}>
+                                        <td className="td">{category.name}</td>
+                                        <td className="td">${category.spending.toFixed(2)}</td>
+                                        <td className="td">
+                                            <svg width="20" height="20">
+                                                <rect x="10" y="10" width="10" height="10" fill={colors[index]} />
+                                            </svg>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
