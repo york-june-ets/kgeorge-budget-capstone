@@ -11,14 +11,16 @@ import Link from "next/link"
 
 export default function EditProfile() {
     const router = useRouter()
-    const {currentCustomer, token, logout, updateSession} = useContext(AuthContext)
-    const [loading, setLoading] = useState<boolean>(false)
+    const {currentCustomer, token, loading, logout, updateSession} = useContext(AuthContext)
+    // const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>("")
     const confirmPassword = useRef<HTMLInputElement>(null)
     const [updateProfileRequest, setUpdateProfileRequest] = useState<SignupRequest>({firstName: "", lastName: "", email: "", password: "", phoneNumber: ""})
 
     //redirect to home if no local stored customer info
     useEffect(() => {
+        console.log("useEffect runs")
+        console.log("loading: " + loading + ", token: " + token + ", currentCustomer: " + currentCustomer)
         if (!loading && (!token || !currentCustomer)) {window.location.href='/welcome'}
     }, [token, currentCustomer, loading])
     
@@ -45,11 +47,12 @@ export default function EditProfile() {
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        setLoading(true)
+        console.log("handle submit start loading: " + loading)
         const submitUpdateProfileRequest = async () => {
             try {
                 if (token) {
                     const response = await fetchUpdateCustomer(token, updateProfileRequest)
+                    console.log("fetch update customer: " + loading)
                     if (response.ok) {
                         setError("Profile updated successfully")
                     } 
@@ -61,18 +64,17 @@ export default function EditProfile() {
             } catch (err) {
                 setError("An unexpected error occured")
                 console.error(err)
-            } finally {
-                setLoading(false)
             }
+            console.log(" call create new session: " + loading)
             await createNewSession()
         }
         const createNewSession = async () => {
-            setLoading(true)
             try {
                 if (token && currentCustomer) {
                     const response = await fetchStartSession(token)
                     if (response.ok) {
                         const authData = await response.json()
+                        console.log("call update session: " + loading)
                         updateSession(authData.token, authData.customer)
                     } else {
                         const error = await response.json()
@@ -83,7 +85,7 @@ export default function EditProfile() {
                 setError("An unexpected error occured")
                 console.error(err)
             } finally {
-                setLoading(false)
+                console.log("done and set false")
             }
         }
         if (updateProfileRequest.password === confirmPassword.current?.value) {

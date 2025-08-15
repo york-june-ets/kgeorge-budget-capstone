@@ -40,7 +40,6 @@ export const TransactionProvider: React.FC<{children: ReactNode}> = ({children})
     useEffect(() => {
         setLoadingTransactions(true)
         const getCustomerTransactions = async () => {
-            console.log("get transactions")
             try {
                 if (token) {
                     const response = await fetchCustomerTransactions(token, transactionFilters)
