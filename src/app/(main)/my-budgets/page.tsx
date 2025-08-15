@@ -79,6 +79,7 @@ export default function MyBudgets() {
                     }
                     if (response.ok) {
                         refresh()
+                        setBudgetRequest({category: "", budgetLimit: "", timePeriod: ""})
                     } 
                     else {
                         const error = await response.json()

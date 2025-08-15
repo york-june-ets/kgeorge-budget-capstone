@@ -46,6 +46,7 @@ export default function MyCategories() {
                     const response = await fetchCreateCategory(token, categoryRequest)
                     if (response.ok) {
                         refresh()
+                        setCategoryRequest({name: ""})
                     } 
                     else {
                         const error = await response.json()
