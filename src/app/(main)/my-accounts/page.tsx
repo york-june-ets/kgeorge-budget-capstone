@@ -57,6 +57,7 @@ export default function MyAccounts() {
                     const response = await fetchCreateAccount(token, accountRequest)
                     if (response.ok) {
                         refresh()
+                        setAccountRequest({ name: "", type: "", balance: "0.00" })
                     } 
                     else {
                         const error = await response.json()
@@ -92,6 +93,7 @@ export default function MyAccounts() {
                     }
                     if (response.ok) {
                         refresh()
+                        setAccountRequest({name: "", type: "", balance: "0.00"})
                     } 
                     else {
                         const error = await response.json()
@@ -108,6 +110,7 @@ export default function MyAccounts() {
         submitEditAccountRequest()
         setAccountId(null)
         setAccountRequest({name: "", type: "", balance: "0.00"})
+        event.currentTarget.reset
         setEdit(false)
     }
 
